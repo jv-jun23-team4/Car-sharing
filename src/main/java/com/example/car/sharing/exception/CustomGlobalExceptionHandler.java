@@ -3,7 +3,6 @@ package com.example.car.sharing.exception;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.Data;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -52,17 +51,6 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return e.getDefaultMessage();
     }
 
-    @Data
-    private class ResponseBody {
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        private LocalDateTime timestamp;
-        private HttpStatus status;
-        private List<String> errors;
-
-        public ResponseBody(LocalDateTime timestamp, HttpStatus status, List<String> errors) {
-            this.timestamp = timestamp;
-            this.status = status;
-            this.errors = errors;
-        }
-    }
+    private record ResponseBody (@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+                                      LocalDateTime timestamp, HttpStatus status, List<String> errors) {}
 }
