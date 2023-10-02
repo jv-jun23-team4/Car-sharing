@@ -9,9 +9,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
-import lombok.Data;
 import java.math.BigDecimal;
 import java.net.URL;
+import lombok.Data;
 
 @Data
 @Entity
