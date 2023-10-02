@@ -5,8 +5,8 @@ import com.example.car.sharing.dto.user.UserLoginResponseDto;
 import com.example.car.sharing.dto.user.UserRegistrationRequestDto;
 import com.example.car.sharing.dto.user.UserRegistrationResponseDto;
 import com.example.car.sharing.exception.RegistrationException;
-import com.example.car.sharing.security.AuthentificationService;
-import com.example.car.sharing.service.user.UserService;
+import com.example.car.sharing.security.AuthenticationService;
+import com.example.car.sharing.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/auth")
 public class AuthenticationController {
     private final UserService userService;
-    private final AuthentificationService authentificationService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
     public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto request) {
-        return authentificationService.authenticate(request);
+        return authenticationService.authenticate(request);
     }
 
     @PostMapping(value = "/register")
