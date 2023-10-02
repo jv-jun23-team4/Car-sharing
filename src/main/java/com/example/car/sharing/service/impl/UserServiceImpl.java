@@ -1,6 +1,6 @@
 package com.example.car.sharing.service.impl;
 
-import com.example.car.sharing.dto.user.UserDto;
+import com.example.car.sharing.dto.user.UpdateUserData;
 import com.example.car.sharing.dto.user.UserRegistrationRequestDto;
 import com.example.car.sharing.dto.user.UserRegistrationResponseDto;
 import com.example.car.sharing.exception.EntityNotFoundException;
@@ -32,18 +32,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can`t find user by id: " + id));
-        return userMapper.toDto(user);
+    public UpdateUserData getUserById() {
+        return userMapper.toDto(getAuthenticatedUser());
     }
 
     @Override
-    public UserDto update(Long id, UserDto userDto) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can`t find user by id: " + id));
-        User updatedUser = userMapper.toModel(userDto);
-        updatedUser.setId(existingUser.getId());
+    public UpdateUserData update(UpdateUserData updateUserData) {
+        User updatedUser = userMapper.toModel(updateUserData);
+        updatedUser.setId(getAuthenticatedUser().getId());
         return userMapper.toDto(userRepository.save(updatedUser));
     }
 

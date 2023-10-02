@@ -4,6 +4,6 @@ import com.example.car.sharing.model.User;
 import lombok.Data;
 
 @Data
-public class UserRoleDto {
+public class UpdateUserRole {
     private User.UserRole role;
 }
