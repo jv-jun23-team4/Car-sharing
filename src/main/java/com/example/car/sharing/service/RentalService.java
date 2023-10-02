@@ -1,11 +1,13 @@
 package com.example.car.sharing.service;
 
+import com.example.car.sharing.dto.rental.CreateRentalDto;
+import com.example.car.sharing.dto.rental.RentalDto;
 import com.example.car.sharing.model.Rental;
 import java.time.LocalDate;
 import java.util.List;
 
 public interface RentalService {
-    void addRental(Rental rental);
+    RentalDto addRental(CreateRentalDto rental);
 
     List<Rental> getRentalsByUserIdAndStatus(Long userId, Boolean isActive);
 
