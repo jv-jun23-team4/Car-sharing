@@ -1,7 +1,10 @@
 package com.example.car.sharing.repository;
 
 import com.example.car.sharing.model.User;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<Object> findByEmail(String email);
 }
+
