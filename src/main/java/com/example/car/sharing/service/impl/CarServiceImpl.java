@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CarServiceImpl implements CarService {
 
+    private static final int PAGE_SIZE = 50;
     private final CarRepository carRepository;
     private final CarMapper carMapper;
-    private static final int PAGE_SIZE = 50;
 
     @Override
     public List<CarDto> findAll(int page) {
