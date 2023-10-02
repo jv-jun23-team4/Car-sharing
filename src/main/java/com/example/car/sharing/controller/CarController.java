@@ -2,6 +2,7 @@ package com.example.car.sharing.controller;
 
 import com.example.car.sharing.dto.car.CarCreateDto;
 import com.example.car.sharing.dto.car.CarDto;
+import com.example.car.sharing.dto.car.CarUpdateDto;
 import com.example.car.sharing.service.CarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,8 +48,8 @@ public class CarController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update a car", description = "Update data about an existing car")
-    public CarDto update(@PathVariable Long id, @RequestBody CarDto carDto) {
-        return carService.update(id, carDto);
+    public CarDto update(@PathVariable Long id, @RequestBody CarUpdateDto updateDto) {
+        return carService.update(id, updateDto);
     }
 
     @DeleteMapping("/{id}")

@@ -2,6 +2,7 @@ package com.example.car.sharing.service.impl;
 
 import com.example.car.sharing.dto.car.CarCreateDto;
 import com.example.car.sharing.dto.car.CarDto;
+import com.example.car.sharing.dto.car.CarUpdateDto;
 import com.example.car.sharing.exception.EntityNotFoundException;
 import com.example.car.sharing.mapper.CarMapper;
 import com.example.car.sharing.model.Car;
@@ -44,10 +45,10 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarDto update(Long id, CarDto carDto) {
+    public CarDto update(Long id, CarUpdateDto carUpdateDto) {
         Car existingCar = carRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can`t find car by id: " + id));
-        Car updatedCar = carMapper.toEntity(carDto);
+        Car updatedCar = carMapper.toEntity(carUpdateDto);
         updatedCar.setId(existingCar.getId());
         return carMapper.toDto(carRepository.save(updatedCar));
     }
