@@ -51,6 +51,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return e.getDefaultMessage();
     }
 
-    private record ResponseBody (@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-                                      LocalDateTime timestamp, HttpStatus status, List<String> errors) {}
+    private record ResponseBody(
+            @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+            LocalDateTime timestamp, HttpStatus status,
+            List<String> errors) {}
 }
