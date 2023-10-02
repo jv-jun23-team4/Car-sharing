@@ -1,8 +1,8 @@
 package com.example.car.sharing.service;
 
-import com.example.car.sharing.dto.car.CarCreateDto;
 import com.example.car.sharing.dto.car.CarDto;
-import com.example.car.sharing.dto.car.CarUpdateDto;
+import com.example.car.sharing.dto.car.CreateCarDto;
+import com.example.car.sharing.dto.car.UpdateCarDto;
 import java.util.List;
 
 public interface CarService {
@@ -10,9 +10,9 @@ public interface CarService {
 
     CarDto findById(Long id);
 
-    CarDto create(CarCreateDto carCreateDto);
+    CarDto create(CreateCarDto createCarDto);
 
-    CarDto update(Long id, CarUpdateDto carUpdateDto);
+    CarDto update(Long id, UpdateCarDto updateCarDto);
 
     void delete(Long id);
 }

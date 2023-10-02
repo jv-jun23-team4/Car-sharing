@@ -1,8 +1,8 @@
 package com.example.car.sharing.controller;
 
-import com.example.car.sharing.dto.car.CarCreateDto;
 import com.example.car.sharing.dto.car.CarDto;
-import com.example.car.sharing.dto.car.CarUpdateDto;
+import com.example.car.sharing.dto.car.CreateCarDto;
+import com.example.car.sharing.dto.car.UpdateCarDto;
 import com.example.car.sharing.service.CarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,18 +41,21 @@ public class CarController {
         return carService.findById(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping
     @Operation(summary = "Create a new car", description = "Create a new car")
-    public CarDto create(@RequestBody @Valid CarCreateDto carCreateDto) {
-        return carService.create(carCreateDto);
+    public CarDto create(@RequestBody @Valid CreateCarDto createCarDto) {
+        return carService.create(createCarDto);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping("/{id}")
     @Operation(summary = "Update a car", description = "Update data about an existing car")
-    public CarDto update(@PathVariable Long id, @RequestBody CarUpdateDto updateDto) {
+    public CarDto update(@PathVariable Long id, @RequestBody UpdateCarDto updateDto) {
         return carService.update(id, updateDto);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete car by id", description = "Delete car by id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
