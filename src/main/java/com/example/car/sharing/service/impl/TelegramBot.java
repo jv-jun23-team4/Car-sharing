@@ -1,4 +1,4 @@
-package com.example.car.sharing.service;
+package com.example.car.sharing.service.impl;
 
 import com.example.car.sharing.config.BotConfig;
 import jakarta.annotation.PostConstruct;

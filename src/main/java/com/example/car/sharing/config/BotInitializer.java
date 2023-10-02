@@ -1,6 +1,6 @@
 package com.example.car.sharing.config;
 
-import com.example.car.sharing.service.TelegramBot;
+import com.example.car.sharing.service.impl.TelegramBot;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
