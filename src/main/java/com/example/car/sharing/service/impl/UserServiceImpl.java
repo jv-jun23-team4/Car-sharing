@@ -1,6 +1,7 @@
 package com.example.car.sharing.service.impl;
 
 import com.example.car.sharing.dto.user.UpdateUserData;
+import com.example.car.sharing.dto.user.UserDto;
 import com.example.car.sharing.dto.user.UserRegistrationRequestDto;
 import com.example.car.sharing.dto.user.UserRegistrationResponseDto;
 import com.example.car.sharing.exception.EntityNotFoundException;
@@ -24,23 +25,26 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public void updateUserRoleById(Long id, User.UserRole role) {
+    public UserDto updateUserRoleById(Long id, User.UserRole role) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can`t find user by id: " + id));
         existingUser.setRole(role);
-        userRepository.save(existingUser);
+        return userMapper.toDto(userRepository.save(existingUser));
     }
 
     @Override
-    public UpdateUserData getUserById() {
+    public UserDto getUserById() {
         return userMapper.toDto(getAuthenticatedUser());
     }
 
     @Override
-    public UpdateUserData update(UpdateUserData updateUserData) {
-        User updatedUser = userMapper.toModel(updateUserData);
-        updatedUser.setId(getAuthenticatedUser().getId());
-        return userMapper.toDto(userRepository.save(updatedUser));
+    public UserDto update(UpdateUserData updateUserData) {
+        User currentUser = getAuthenticatedUser();
+        currentUser.setFirstName(updateUserData.getFirstName() == null ?
+                currentUser.getFirstName() : updateUserData.getFirstName());
+        currentUser.setLastName(updateUserData.getLastName() == null
+                ? currentUser.getUsername() : updateUserData.getLastName());
+        return userMapper.toDto(userRepository.save(currentUser));
     }
 
     @Override

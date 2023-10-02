@@ -1,6 +1,7 @@
 package com.example.car.sharing.service;
 
 import com.example.car.sharing.dto.user.UpdateUserData;
+import com.example.car.sharing.dto.user.UserDto;
 import com.example.car.sharing.dto.user.UserRegistrationRequestDto;
 import com.example.car.sharing.dto.user.UserRegistrationResponseDto;
 import com.example.car.sharing.exception.RegistrationException;
@@ -12,9 +13,9 @@ public interface UserService {
 
     User getAuthenticatedUser();
   
-    void updateUserRoleById(Long id, User.UserRole role);
+    UserDto updateUserRoleById(Long id, User.UserRole role);
   
-    UpdateUserData getUserById();
+    UserDto getUserById();
   
-    UpdateUserData update(UpdateUserData updateUserData);
+    UserDto update(UpdateUserData updateUserData);
 }
