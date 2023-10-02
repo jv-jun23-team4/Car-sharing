@@ -32,14 +32,14 @@ public class Payment {
     @Column(nullable = false)
     private Long rentalId;
 
-    @Column(name = "session_url", nullable = false)
+    @Column(nullable = false)
     private URL sessionUrl;
 
-    @Column(name = "session_id", nullable = false)
+    @Column(nullable = false)
     private String sessionId;
 
     @DecimalMin("0.0")
-    @Column(name = "amount_to_pay", nullable = false)
+    @Column(nullable = false)
     private BigDecimal amountToPay;
 
     public enum Status {
