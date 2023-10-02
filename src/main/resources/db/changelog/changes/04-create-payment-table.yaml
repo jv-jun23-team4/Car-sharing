@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-payments-table
+      author: denis
+      changes:
+        - createTable:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rental_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_rental_id
+                    references: rentals(id)
+              - column:
+                  name: session_url
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: session_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount_to_pay
+                  type: DECIMAL(10, 2)
+                  constraints:
+                    nullable: false
+                    checkConstraint: 'amount_to_pay >= 0.0'

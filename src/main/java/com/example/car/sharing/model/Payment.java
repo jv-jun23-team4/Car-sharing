@@ -4,9 +4,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
@@ -29,17 +32,18 @@ public class Payment {
     @Column(nullable = false)
     private Type type;
 
-    @Column(nullable = false)
-    private Long rentalId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Rental rental;
 
-    @Column(name = "session_url", nullable = false)
+    @Column(nullable = false)
     private URL sessionUrl;
 
-    @Column(name = "session_id", nullable = false)
+    @Column(nullable = false)
     private String sessionId;
 
     @DecimalMin("0.0")
-    @Column(name = "amount_to_pay", nullable = false)
+    @Column(nullable = false)
     private BigDecimal amountToPay;
 
     public enum Status {
