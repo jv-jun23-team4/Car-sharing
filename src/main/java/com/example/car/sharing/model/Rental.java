@@ -30,4 +30,7 @@ public class Rental {
 
     @Column(nullable = false)
     private Long userId;
+
+    @Column(nullable = false)
+    private boolean isActive = true;
 }
