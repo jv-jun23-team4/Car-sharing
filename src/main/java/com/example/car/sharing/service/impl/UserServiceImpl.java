@@ -1,9 +1,9 @@
 package com.example.car.sharing.service.impl;
 
 import com.example.car.sharing.dto.user.UserDto;
-import com.example.car.sharing.exception.EntityNotFoundException;
 import com.example.car.sharing.dto.user.UserRegistrationRequestDto;
 import com.example.car.sharing.dto.user.UserRegistrationResponseDto;
+import com.example.car.sharing.exception.EntityNotFoundException;
 import com.example.car.sharing.exception.RegistrationException;
 import com.example.car.sharing.mapper.UserMapper;
 import com.example.car.sharing.model.User;
@@ -54,12 +54,12 @@ public class UserServiceImpl implements UserService {
             throw new RegistrationException("User with such an email " + userRequestDto.getEmail()
                     + "already exists in the system.");
         }
-        User user = userMapper.toModel(userRequestDto);
+        User user = userMapper.toAuthenticateModel(userRequestDto);
         user.setRole(User.UserRole.CUSTOMER);
         user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
         user.setRole(User.UserRole.CUSTOMER);
         User savedUser = userRepository.save(user);
-        return userMapper.toDto(savedUser);
+        return userMapper.toRegistrationDto(savedUser);
     }
 
     @Override

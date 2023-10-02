@@ -1,6 +1,5 @@
 package com.example.car.sharing.dto.user;
 
-import com.example.car.sharing.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;

@@ -14,4 +14,6 @@ public interface UserMapper {
     User toModel(UserDto userDto);
 
     UserRegistrationResponseDto toRegistrationDto(User user);
+
+    User toAuthenticateModel(UserRegistrationRequestDto requestDto);
 }
