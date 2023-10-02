@@ -18,31 +18,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/payments")
 public class PaymentController {
-    private final PaymentService paymentService;
+    private final PaymentService paymentServiceImpl;
 
     @PostMapping("/")
     public String createPaymentSession(@RequestBody PaymentRequest paymentRequest)
             throws StripeException {
-        return paymentService.createPaymentSession(paymentRequest);
+        return paymentServiceImpl.createPaymentSession(paymentRequest);
     }
 
     @GetMapping("/")
     public List<Payment> getPaymentsByUserId(@RequestParam("user_id") Long userId) {
-        return paymentService.getPaymentsByUserId(userId);
+        return paymentServiceImpl.getPaymentsByUserId(userId);
     }
 
     @GetMapping("/success/")
     public ResponseEntity<String> handleSuccessfulPayment(
             @RequestParam("session_id") String sessionId)
             throws StripeException {
-        paymentService.handleSuccessfulPayment(sessionId);
+        paymentServiceImpl.handleSuccessfulPayment(sessionId);
         return ResponseEntity.ok("Payment successful! Thank you for your payment.");
     }
 
     @GetMapping("/cancel/")
     public ResponseEntity<String> handleCanceledPayment(
             @RequestParam("session_id") String sessionId) {
-        paymentService.handleCanceledPayment(sessionId);
+        paymentServiceImpl.handleCanceledPayment(sessionId);
         return ResponseEntity.ok("Payment canceled. Your payment has been paused.");
     }
 }
