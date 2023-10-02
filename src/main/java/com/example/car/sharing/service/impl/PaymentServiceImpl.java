@@ -31,18 +31,23 @@ public class PaymentServiceImpl implements PaymentService {
         Stripe.apiKey = stripeSecretKey;
 
         Rental rental = rentalRepository.findById(paymentRequest.getRentalId())
-                .orElseThrow(() -> new EntityNotFoundException("Rental not found"));
-
+                .orElseThrow(() -> new EntityNotFoundException("Rental not found with id"
+                        + paymentRequest.getRentalId()));
         Payment payment = new Payment();
+        payment.setRental(rental);
+        payment.setAmountToPay(paymentRequest.getAmount());
         payment.setStatus(Payment.Status.PENDING);
         payment.setType(Payment.Type.PAYMENT);
-        payment.setRental(rental);
-        payment.setSessionUrl(paymentRequest.getSessionUrl());
-        payment.setAmountToPay(paymentRequest.getAmount());
+
+        SessionCreateParams params = createStripeSession(payment);
+
+        Session session = Session.create(params);
+        payment.setSessionUrl(session.getUrl()
+                .substring(0, Math.min(session.getUrl().length(), 255)));
+        payment.setSessionId(session.getId());
 
         paymentRepository.save(payment);
 
-        Session session = createStripeSession(payment);
         return session.getId();
     }
 
@@ -79,27 +84,30 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(payment);
     }
 
-    private Session createStripeSession(Payment payment) throws StripeException {
-        SessionCreateParams.Builder builder = new SessionCreateParams.Builder();
-        builder.addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD);
-        builder.setMode(SessionCreateParams.Mode.PAYMENT);
-        builder.setSuccessUrl(payment.getSessionUrl() + "/success");
-        builder.setCancelUrl(payment.getSessionUrl() + "/cancel");
-
-        SessionCreateParams.LineItem.PriceData.Builder priceBuilder =
-                SessionCreateParams.LineItem.PriceData.builder();
-        priceBuilder.setCurrency("usd");
-        priceBuilder.setUnitAmount(
-                payment.getAmountToPay().multiply(BigDecimal.valueOf(100)).longValue());
-
-        SessionCreateParams.LineItem.Builder lineItemBuilder =
-                SessionCreateParams.LineItem.builder();
-        lineItemBuilder.setPriceData(priceBuilder.build());
-        lineItemBuilder.setQuantity(1L);
-
-        builder.addLineItem(lineItemBuilder.build());
-
-        SessionCreateParams params = builder.build();
-        return Session.create(params);
+    private SessionCreateParams createStripeSession(Payment payment) {
+        return new SessionCreateParams.Builder()
+                .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
+                .setMode(SessionCreateParams.Mode.PAYMENT)
+                .setSuccessUrl("https://example.com/success")
+                .setCancelUrl("https://example.com/cancel")
+                .addLineItem(
+                        new SessionCreateParams.LineItem.Builder()
+                                .setQuantity(1L)
+                                .setPriceData(
+                                        new SessionCreateParams.LineItem.PriceData.Builder()
+                                                .setCurrency("usd")
+                                                .setUnitAmount(payment.getAmountToPay()
+                                                        .multiply(new BigDecimal(100)).longValue())
+                                                .setProductData(
+                                                        new SessionCreateParams.LineItem
+                                                                .PriceData.ProductData.Builder()
+                                                                .setName("Payment")
+                                                                .build()
+                                                )
+                                                .build()
+                                )
+                                .build()
+                )
+                .build();
     }
 }

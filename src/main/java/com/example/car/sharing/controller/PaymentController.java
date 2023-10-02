@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,31 +19,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/payments")
 public class PaymentController {
-    private final PaymentService paymentServiceImpl;
+    private final PaymentService paymentService;
 
     @PostMapping("/")
     public String createPaymentSession(@RequestBody PaymentRequest paymentRequest)
             throws StripeException {
-        return paymentServiceImpl.createPaymentSession(paymentRequest);
+        return paymentService.createPaymentSession(paymentRequest);
     }
 
-    @GetMapping("/")
-    public List<Payment> getPaymentsByUserId(@RequestParam("user_id") Long userId) {
-        return paymentServiceImpl.getPaymentsByUserId(userId);
+    @GetMapping("/{user_id}")
+    public List<Payment> getPaymentsByUserId(@PathVariable("user_id") Long userId) {
+        return paymentService.getPaymentsByUserId(userId);
     }
 
     @GetMapping("/success/")
     public ResponseEntity<String> handleSuccessfulPayment(
             @RequestParam("session_id") String sessionId)
             throws StripeException {
-        paymentServiceImpl.handleSuccessfulPayment(sessionId);
+        paymentService.handleSuccessfulPayment(sessionId);
         return ResponseEntity.ok("Payment successful! Thank you for your payment.");
     }
 
     @GetMapping("/cancel/")
     public ResponseEntity<String> handleCanceledPayment(
             @RequestParam("session_id") String sessionId) {
-        paymentServiceImpl.handleCanceledPayment(sessionId);
+        paymentService.handleCanceledPayment(sessionId);
         return ResponseEntity.ok("Payment canceled. Your payment has been paused.");
     }
 }
