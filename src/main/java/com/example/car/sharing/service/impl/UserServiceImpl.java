@@ -1,6 +1,7 @@
 package com.example.car.sharing.service.impl;
 
 import com.example.car.sharing.dto.user.UserDto;
+import com.example.car.sharing.exception.EntityNotFoundException;
 import com.example.car.sharing.mapper.UserMapper;
 import com.example.car.sharing.model.User;
 import com.example.car.sharing.repository.UserRepository;
