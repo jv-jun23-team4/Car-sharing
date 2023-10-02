@@ -1,6 +1,5 @@
 package com.example.car.sharing.model;
 
-import com.example.car.sharing.model.enums.CarType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -42,4 +41,8 @@ public class Car {
 
     @Column(nullable = false)
     private boolean isDeleted = false;
+
+    public enum CarType {
+        SEDAN, SUV, HATCHBACK, UNIVERSAL
+    }
 }
