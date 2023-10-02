@@ -1,6 +1,7 @@
 package com.example.car.sharing.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.stripe.exception.StripeException;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.http.HttpHeaders;
@@ -40,6 +41,15 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 HttpStatus.NOT_FOUND, List.of(ex.getMessage()));
         return new ResponseEntity<>(responseBody,
                 HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @ExceptionHandler(StripeException.class)
+    public ResponseEntity<Object> handleStripeException(
+            StripeException ex
+    ) {
+        ResponseBody responseBody = new ResponseBody(LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR, List.of(ex.getMessage()));
+        return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private String getErrorMessage(ObjectError e) {
