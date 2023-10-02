@@ -1,5 +1,6 @@
 package com.example.car.sharing.service;
 
+import com.example.car.sharing.dto.user.UserDto;
 import com.example.car.sharing.dto.user.UserRegistrationRequestDto;
 import com.example.car.sharing.dto.user.UserRegistrationResponseDto;
 import com.example.car.sharing.exception.RegistrationException;
@@ -10,4 +11,10 @@ public interface UserService {
             throws RegistrationException;
 
     User getAuthenticatedUser();
+  
+    void updateUserRoleById(Long id, User.UserRole role);
+  
+    UserDto getUserById(Long id);
+  
+    UserDto update(Long id, UserDto userDto);
 }
