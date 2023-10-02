@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 public interface CarService {
-    List<CarDto> findAll(Pageable pageable);
+    List<CarDto> findAll(int page);
 
     CarDto findById(Long id);
 

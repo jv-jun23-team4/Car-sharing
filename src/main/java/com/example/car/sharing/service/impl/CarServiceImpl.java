@@ -9,6 +9,7 @@ import com.example.car.sharing.repository.CarRepository;
 import com.example.car.sharing.service.CarService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,12 @@ public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
     private final CarMapper carMapper;
+    private static final int PAGE_SIZE = 50;
 
     @Override
-    public List<CarDto> findAll(Pageable pageable) {
-        return carRepository.findAll()
+    public List<CarDto> findAll(int page) {
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return carRepository.findAll(pageable)
                 .stream()
                 .map(carMapper::toDto)
                 .toList();
