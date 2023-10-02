@@ -40,8 +40,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto update(UpdateUserData updateUserData) {
         User currentUser = getAuthenticatedUser();
-        currentUser.setFirstName(updateUserData.getFirstName() == null ?
-                currentUser.getFirstName() : updateUserData.getFirstName());
+        currentUser.setFirstName(updateUserData.getFirstName() == null
+                ? currentUser.getFirstName() : updateUserData.getFirstName());
         currentUser.setLastName(updateUserData.getLastName() == null
                 ? currentUser.getUsername() : updateUserData.getLastName());
         return userMapper.toDto(userRepository.save(currentUser));
