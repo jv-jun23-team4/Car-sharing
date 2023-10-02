@@ -1,5 +1,6 @@
 package com.example.car.sharing.model;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
