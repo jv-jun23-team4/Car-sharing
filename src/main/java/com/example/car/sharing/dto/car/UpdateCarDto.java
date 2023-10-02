@@ -6,8 +6,7 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class CarUpdateDto {
-    @NotNull
+public class UpdateCarDto {
     @Positive
     private int inventory;
 

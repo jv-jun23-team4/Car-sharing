@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class CarCreateDto {
+public class CreateCarDto {
     @Size(min = 1, max = 50)
     @NotBlank
     private String model;
@@ -18,7 +18,6 @@ public class CarCreateDto {
     @NotBlank
     private String brand;
 
-    @NotBlank
     private CarType type;
 
     @NotNull

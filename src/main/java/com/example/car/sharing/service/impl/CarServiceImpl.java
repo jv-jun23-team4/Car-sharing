@@ -1,8 +1,8 @@
 package com.example.car.sharing.service.impl;
 
-import com.example.car.sharing.dto.car.CarCreateDto;
 import com.example.car.sharing.dto.car.CarDto;
-import com.example.car.sharing.dto.car.CarUpdateDto;
+import com.example.car.sharing.dto.car.CreateCarDto;
+import com.example.car.sharing.dto.car.UpdateCarDto;
 import com.example.car.sharing.exception.EntityNotFoundException;
 import com.example.car.sharing.mapper.CarMapper;
 import com.example.car.sharing.model.Car;
@@ -14,11 +14,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class CarServiceImpl implements CarService {
-
-    private static final int PAGE_SIZE = 50;
+    private static final int PAGE_SIZE = 20;
     private final CarRepository carRepository;
     private final CarMapper carMapper;
 
@@ -39,18 +38,18 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarDto create(CarCreateDto carCreateDto) {
-        Car car = carMapper.toEntity(carCreateDto);
+    public CarDto create(CreateCarDto createCarDto) {
+        Car car = carMapper.toEntity(createCarDto);
         return carMapper.toDto(carRepository.save(car));
     }
 
     @Override
-    public CarDto update(Long id, CarUpdateDto carUpdateDto) {
+    public CarDto update(Long id, UpdateCarDto updateCarDto) {
         Car existingCar = carRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can`t find car by id: " + id));
-        Car updatedCar = carMapper.toEntity(carUpdateDto);
-        updatedCar.setId(existingCar.getId());
-        return carMapper.toDto(carRepository.save(updatedCar));
+        existingCar.setInventory(updateCarDto.getInventory());
+        existingCar.setDailyFee(updateCarDto.getDailyFee());
+        return carMapper.toDto(carRepository.save(existingCar));
     }
 
     @Override
