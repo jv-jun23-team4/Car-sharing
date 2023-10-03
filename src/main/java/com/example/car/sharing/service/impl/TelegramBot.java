@@ -17,6 +17,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
@@ -35,6 +37,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private static final String REGISTER_COMMAND = "/register";
     private static final String NEW_RENTAL_COMMAND = "/newrental";
     private static final String END_RENTAL_COMMAND = "/endrental";
+    private static final String MY_RENTALS = "/myrentals";
     private static final String WRONG_PASSWORD_MESSAGE =
             "Wrong email or password, please try again";
     private static final String INCORRECT_REQUEST =
@@ -58,6 +61,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         commands.add(new BotCommand(REGISTER_COMMAND, "authenticate user by email and password"));
         commands.add(new BotCommand(NEW_RENTAL_COMMAND, "add a new rental"));
         commands.add(new BotCommand(END_RENTAL_COMMAND, "end current rental"));
+        commands.add(new BotCommand(MY_RENTALS, "You can see your current rental or all history"));
         try {
             this.execute(new SetMyCommands(commands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
@@ -75,9 +79,17 @@ public class TelegramBot extends TelegramLongPollingBot {
                 case REGISTER_COMMAND -> sendMessage(chatId, TIP_ABOUT_REGISTRATION_PATTERN);
                 case NEW_RENTAL_COMMAND -> newRentalCommandReceived(chatId, getName(update));
                 case END_RENTAL_COMMAND -> endRentalCommandReceived(chatId, getName(update));
+                case MY_RENTALS -> openOptions(chatId, update);
                 default -> registerCommandReceived(chatId, update);
             }
         }
+    }
+
+    public void sendMessage(long chatId, String text) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        message.setText(text);
+        executeMessage(message);
     }
 
     @Override
@@ -105,14 +117,35 @@ public class TelegramBot extends TelegramLongPollingBot {
         Optional<User> optionalUser =
                 userRepository.findByEmail(userData[EMAIL_INDEX]);
         if (optionalUser.isPresent()
-                && optionalUser.get().getPassword()
-                .equals(passwordEncoder.encode(userData[PASSWORD_INDEX]))) {
+                && passwordEncoder.matches(
+                        passwordEncoder.encode(userData[PASSWORD_INDEX]),
+                        optionalUser.get().getPassword())) {
+
             User user = optionalUser.get();
             user.setChatId(chatId);
             userRepository.save(user);
         } else {
             sendMessage(chatId, WRONG_PASSWORD_MESSAGE);
         }
+    }
+
+    private void openOptions(long chatId, Update update) {
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+
+        KeyboardRow currentRental = new KeyboardRow();
+        currentRental.add("Current Rental");
+        keyboardRows.add(currentRental);
+        KeyboardRow historyRental = new KeyboardRow();
+        historyRental.add("My History");
+
+        keyboardRows.add(currentRental);
+        keyboardRows.add(historyRental);
+
+        SendMessage message = new SendMessage();
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setKeyboard(keyboardRows);
+        message.setReplyMarkup(keyboardMarkup);
+        executeMessage(message);
     }
 
     private void newRentalCommandReceived(long chatId, String name) {
@@ -125,10 +158,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         sendMessage(chatId, answer);
     }
 
-    public void sendMessage(long chatId, String text) {
-        SendMessage message = new SendMessage();
-        message.setChatId(chatId);
-        message.setText(text);
+    private void executeMessage(SendMessage message) {
         try {
             execute(message);
         } catch (TelegramApiException e) {
