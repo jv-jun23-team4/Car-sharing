@@ -13,6 +13,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
+import java.time.Instant;
 import lombok.Data;
 
 @Data
@@ -45,10 +46,14 @@ public class Payment {
     @Column(nullable = false)
     private BigDecimal amountToPay;
 
+    @Column(nullable = false)
+    private Instant expiredTime;
+
     public enum Status {
         PENDING,
         PAID,
-        CANCELED
+        CANCELED,
+        EXPIRED
     }
 
     public enum Type {

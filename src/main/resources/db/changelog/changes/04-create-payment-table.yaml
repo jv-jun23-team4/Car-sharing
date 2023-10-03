@@ -46,3 +46,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     checkConstraint: 'amount_to_pay >= 0.0'
+              - column:
+                  name: expired_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
