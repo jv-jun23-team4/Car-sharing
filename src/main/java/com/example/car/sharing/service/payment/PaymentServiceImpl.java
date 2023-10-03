@@ -75,8 +75,11 @@ public class PaymentServiceImpl implements PaymentService {
         Session session = Session.create(params);
         payment.setSessionUrl(session.getUrl());
         payment.setSessionId(session.getId());
+        payment.setExpiredTime(Instant.ofEpochSecond(session.getExpiresAt()));
 
         notificationAboutSuccessfulPayment(payment, rental);
+        rental.setActive(false);
+        rentalRepository.save(rental);
         paymentRepository.save(payment);
         return new PaymentResponseDto(payment.getSessionUrl());
     }

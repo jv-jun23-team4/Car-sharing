@@ -57,6 +57,7 @@ public class PaymentController {
     public ResponseEntity<String> handleCanceledPayment(
             @RequestParam("session_id") String sessionId) {
         paymentService.handleCanceledPayment(sessionId);
-        return ResponseEntity.ok("Payment canceled. Your payment has been paused.");
+        return ResponseEntity.ok("Payment canceled. "
+                + "You can pay later but the session will be available for 24 hours");
     }
 }
