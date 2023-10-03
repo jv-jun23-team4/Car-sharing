@@ -1,7 +1,9 @@
 package com.example.car.sharing.service.impl;
 
 import com.example.car.sharing.config.BotConfig;
+import com.example.car.sharing.model.Rental;
 import com.example.car.sharing.model.User;
+import com.example.car.sharing.repository.RentalRepository;
 import com.example.car.sharing.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -17,8 +19,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
@@ -29,6 +31,13 @@ public class TelegramBot extends TelegramLongPollingBot {
             With this bot, you will be able to conveniently manage your rentals
             and receive notifications about the status of your rental.
             """;
+    private static final String RENTAL_TEMPLATE = """
+        Rental Details:
+        Car Model: %s
+        Rental Date: %s
+        Return Date: %s
+        Total Price: %s
+            """;
     private static final String RENTAL_COMPLETED_MESSAGE =
             ", your rental successfully completed.";
     private static final String RENTAL_ENDED_MESSAGE =
@@ -38,6 +47,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private static final String NEW_RENTAL_COMMAND = "/newrental";
     private static final String END_RENTAL_COMMAND = "/endrental";
     private static final String MY_RENTALS = "/myrentals";
+    private static final String MY_HISTORY = "/myhistory";
     private static final String WRONG_PASSWORD_MESSAGE =
             "Wrong email or password, please try again";
     private static final String INCORRECT_REQUEST =
@@ -46,6 +56,9 @@ public class TelegramBot extends TelegramLongPollingBot {
     private static final String TIP_ABOUT_REGISTRATION_PATTERN =
             "Write your message according to the pattern: \n"
                     + "<email> <password>";
+    private static final String CURRENT_RENTALS_COMMAND = "currentRentals";
+    private static final String UNREGISTERED_MESSAGE =
+            "You are not registered. Please register to access your rental history.";
     private static final String SPACE_SPLITTER = " ";
     private static final int EMAIL_INDEX = 0;
     private static final int PASSWORD_INDEX = 1;
@@ -53,6 +66,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final PasswordEncoder passwordEncoder;
     private List<BotCommand> commands;
     private final UserRepository userRepository;
+    private final RentalRepository rentalRepository;
 
     @PostConstruct
     private void initMenu() {
@@ -79,7 +93,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                 case REGISTER_COMMAND -> sendMessage(chatId, TIP_ABOUT_REGISTRATION_PATTERN);
                 case NEW_RENTAL_COMMAND -> newRentalCommandReceived(chatId, getName(update));
                 case END_RENTAL_COMMAND -> endRentalCommandReceived(chatId, getName(update));
-                case MY_RENTALS -> openOptions(chatId, update);
+                case MY_RENTALS -> openOptions(chatId);
+                case MY_HISTORY -> sendRentalHistory(chatId);
                 default -> registerCommandReceived(chatId, update);
             }
         }
@@ -118,7 +133,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 userRepository.findByEmail(userData[EMAIL_INDEX]);
         if (optionalUser.isPresent()
                 && passwordEncoder.matches(
-                        passwordEncoder.encode(userData[PASSWORD_INDEX]),
+                        userData[PASSWORD_INDEX],
                         optionalUser.get().getPassword())) {
 
             User user = optionalUser.get();
@@ -129,23 +144,42 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    private void openOptions(long chatId, Update update) {
-        List<KeyboardRow> keyboardRows = new ArrayList<>();
+    private void openOptions(long chatId) {
+        List<InlineKeyboardButton> keyboardRows = new ArrayList<>();
 
-        KeyboardRow currentRental = new KeyboardRow();
-        currentRental.add("Current Rental");
+        InlineKeyboardButton currentRental = new InlineKeyboardButton();
+        currentRental.setText("Current Rentals");
+        currentRental.setCallbackData(CURRENT_RENTALS_COMMAND);
         keyboardRows.add(currentRental);
-        KeyboardRow historyRental = new KeyboardRow();
-        historyRental.add("My History");
 
-        keyboardRows.add(currentRental);
+        InlineKeyboardButton historyRental = new InlineKeyboardButton();
+        currentRental.setText("My History");
+        currentRental.setCallbackData("myHistory");
         keyboardRows.add(historyRental);
 
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        keyboard.setKeyboard(List.of(keyboardRows));
+
         SendMessage message = new SendMessage();
-        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-        keyboardMarkup.setKeyboard(keyboardRows);
-        message.setReplyMarkup(keyboardMarkup);
+        message.setText("Choose options");
+        message.setChatId(chatId);
+        message.setReplyMarkup(keyboard);
         executeMessage(message);
+    }
+
+    private void sendRentalHistory(long chatId) {
+        Optional<User> user = userRepository.findByChatId(chatId);
+        if (user.isPresent()) {
+            List<Rental> rentals = rentalRepository.findByUserId(user.get().getId());
+            List<String> messages = new ArrayList<>();
+            for (Rental rental: rentals) {
+                messages.add(String.format(RENTAL_TEMPLATE));
+            }
+            String historyMessage = String.join(System.lineSeparator(), messages);
+            sendMessage(chatId, historyMessage);
+        } else {
+            sendMessage(chatId, UNREGISTERED_MESSAGE);
+        }
     }
 
     private void newRentalCommandReceived(long chatId, String name) {
