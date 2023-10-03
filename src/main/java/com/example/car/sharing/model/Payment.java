@@ -13,7 +13,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
-import java.net.URL;
 import lombok.Data;
 
 @Data
@@ -37,7 +36,7 @@ public class Payment {
     private Rental rental;
 
     @Column(nullable = false)
-    private URL sessionUrl;
+    private String sessionUrl;
 
     @Column(nullable = false)
     private String sessionId;
@@ -48,7 +47,8 @@ public class Payment {
 
     public enum Status {
         PENDING,
-        PAID
+        PAID,
+        CANCELED
     }
 
     public enum Type {

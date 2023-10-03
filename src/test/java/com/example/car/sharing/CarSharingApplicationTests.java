@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class CarSharingApplicationTests {
 
     @Test
-    void contextLoads() {
-    }
+    void contextLoad() {
 
+    }
 }
