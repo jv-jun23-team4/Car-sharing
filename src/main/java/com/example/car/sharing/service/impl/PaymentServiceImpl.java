@@ -62,7 +62,7 @@ public class PaymentServiceImpl implements PaymentService {
         return payments;
     }
 
-    public void handleSuccessfulPayment(String sessionId) throws StripeException {
+    public void handleSuccessfulPayment(String sessionId) {
         Payment payment = getPaymentBySessionId(sessionId);
         payment.setStatus(Payment.Status.PAID);
         updatePayment(payment);
