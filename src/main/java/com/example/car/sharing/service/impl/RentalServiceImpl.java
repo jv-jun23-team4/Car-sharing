@@ -9,6 +9,7 @@ import com.example.car.sharing.model.Rental;
 import com.example.car.sharing.model.User;
 import com.example.car.sharing.repository.CarRepository;
 import com.example.car.sharing.repository.RentalRepository;
+import com.example.car.sharing.repository.UserRepository;
 import com.example.car.sharing.service.NotificationService;
 import com.example.car.sharing.service.RentalService;
 import com.example.car.sharing.service.UserService;
@@ -40,13 +41,18 @@ public class RentalServiceImpl implements RentalService {
         Car car = carRepository.findById(createRentalDto.getCarId())
                 .orElseThrow(() -> new EntityNotFoundException("Car not found with id: "
                         + createRentalDto.getCarId()));
+        User user = userService.getAuthenticatedUser();
+        if (!rentalRepository.findByUserId(user.getId()).isEmpty()) {
+            throw new EntityNotFoundException("You cannot rent more than one car at a time. "
+                    + "Please complete the current rental transaction before initiating a new one.");
+        }
         if (car.getInventory() <= 0) {
             throw new EntityNotFoundException("Sorry this car is not available now.");
         }
         car.setInventory(car.getInventory() - 1);
         carRepository.save(car);
         Rental newRental = new Rental();
-        newRental.setUserId(userService.getAuthenticatedUser().getId());
+        newRental.setUserId(user.getId());
         newRental.setCarId(car.getId());
         newRental.setRentalDate(LocalDate.now());
         newRental.setReturnDate(createRentalDto.getReturnDate());
