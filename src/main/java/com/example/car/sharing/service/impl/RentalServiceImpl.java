@@ -76,6 +76,9 @@ public class RentalServiceImpl implements RentalService {
     }
 
     private void sendNotificationOfNewRental(User user, Rental rental) {
+        if (user.getChatId() == null) {
+            return;
+        }
         Car car = carRepository.findById(rental.getCarId()).get();
         String carName = car.getBrand() + " " + car.getModel();
 

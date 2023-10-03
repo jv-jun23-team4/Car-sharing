@@ -2,9 +2,9 @@ package com.example.car.sharing.controller;
 
 import com.example.car.sharing.dto.rental.CreateRentalDto;
 import com.example.car.sharing.dto.rental.RentalDto;
+import com.example.car.sharing.dto.rental.SetActualReturnDateDto;
 import com.example.car.sharing.model.Rental;
 import com.example.car.sharing.service.RentalService;
-import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,7 +44,7 @@ public class RentalController {
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/{id}/return")
     public void setActualReturnDate(@PathVariable Long id,
-                                    @RequestBody LocalDate actualReturnDate) {
-        rentalService.setActualReturnDate(id, actualReturnDate);
+                                    @RequestBody SetActualReturnDateDto actualReturnDate) {
+        rentalService.setActualReturnDate(id, actualReturnDate.actualReturnDate());
     }
 }
