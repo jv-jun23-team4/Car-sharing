@@ -25,20 +25,24 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping("/{id}/role")
-    @Operation(summary = "Update user role", description = "Endpoint for updating a users roles")
+    @Operation(summary = "Update user role by ID", description = "The manager can "
+            + "change the role of the user from CUSTOMER to MANAGER, and vice versa, "
+            + "thereby providing and removing access rights for this user.")
     public UserDto updateUserRoleById(@PathVariable Long id,
                                    @RequestBody UpdateUserRole updateUserRole) {
         return userService.updateUserRoleById(id, updateUserRole.getRole());
     }
 
     @GetMapping("/me")
-    @Operation(summary = "Get user info", description = "Endpoint for getting a user info")
+    @Operation(summary = "Get user info", description = "The user can view "
+            + "information from the user's profile")
     public UserDto getMyProfileInfo() {
         return userService.getUserById();
     }
 
     @PatchMapping("/me")
-    @Operation(summary = "Update user's profile info")
+    @Operation(summary = "Update user's profile info",
+            description = "The user can change information from the user's profile")
     public UserDto update(@RequestBody UpdateUserData updatedUpdateUserData) {
         return userService.update(updatedUpdateUserData);
     }
