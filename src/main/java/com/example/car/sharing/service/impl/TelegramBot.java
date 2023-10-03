@@ -65,7 +65,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private static final String END_RENTAL_COMMAND = "/end_rental";
     private static final String MY_RENTALS = "/my_rentals";
     private static final String MY_HISTORY = "/my_history";
-    private static final String MENU = "/menu";
+    private static final String RENTALS_MENU = "/rentals_menu";
     private static final String WRONG_PASSWORD_MESSAGE =
             "Wrong email or password, please try again";
     private static final String INCORRECT_REQUEST =
@@ -95,7 +95,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         commands.add(new BotCommand(END_RENTAL_COMMAND, "You can end current rental"));
         commands.add(new BotCommand(MY_RENTALS, "You can see all rental's history"));
         commands.add(new BotCommand(MY_HISTORY, "You can see your current rental"));
-        commands.add(new BotCommand(MENU, "You can choose option by button"));
+        commands.add(new BotCommand(RENTALS_MENU, "You can choose option by button"));
         try {
             this.execute(new SetMyCommands(commands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
@@ -124,7 +124,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 case END_RENTAL_COMMAND -> endRentalCommandReceived(chatId, getName(update));
                 case MY_RENTALS -> sendCurrentRental(chatId);
                 case MY_HISTORY -> sendRentalHistory(chatId);
-                case MENU -> sendKeyboard(chatId, CHOOSE_OPTION_MESSAGE);
+                case RENTALS_MENU -> sendKeyboard(chatId, CHOOSE_OPTION_MESSAGE);
                 default -> registerCommandReceived(chatId, update);
             }
         }
