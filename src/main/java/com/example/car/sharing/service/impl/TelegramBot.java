@@ -9,11 +9,15 @@ import com.example.car.sharing.repository.RentalRepository;
 import com.example.car.sharing.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -42,16 +46,25 @@ public class TelegramBot extends TelegramLongPollingBot {
         Return Date: %s
         Total Price: %s
             """;
+    private static final String LAST_RENTAL_DAY_MESSAGE = """
+            Hello.
+            Today is the last day of car rental. If you miss the return date, an additional fee
+            (dailyFee * 30%) will be charged to your account for each subsequent day.
+            Return the cars on time :)
+            """;
     private static final String RENTAL_COMPLETED_MESSAGE =
             ", your rental successfully completed.";
     private static final String RENTAL_ENDED_MESSAGE =
             ", your rental successfully closed.";
+    private static final String CHOOSE_OPTION_MESSAGE =
+            "Please, choose what you want to see";
     private static final String START_COMMAND = "/start";
     private static final String REGISTER_COMMAND = "/register";
-    private static final String NEW_RENTAL_COMMAND = "/newrental";
-    private static final String END_RENTAL_COMMAND = "/endrental";
-    private static final String MY_RENTALS = "/myrentals";
-    private static final String MY_HISTORY = "/myhistory";
+    private static final String NEW_RENTAL_COMMAND = "/new_rental";
+    private static final String END_RENTAL_COMMAND = "/end_rental";
+    private static final String MY_RENTALS = "/my_rentals";
+    private static final String MY_HISTORY = "/my_history";
+    private static final String MENU = "/menu";
     private static final String WRONG_PASSWORD_MESSAGE =
             "Wrong email or password, please try again";
     private static final String INCORRECT_REQUEST =
@@ -82,6 +95,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         commands.add(new BotCommand(END_RENTAL_COMMAND, "You can end current rental"));
         commands.add(new BotCommand(MY_RENTALS, "You can see all rental's history"));
         commands.add(new BotCommand(MY_HISTORY, "You can see your current rental"));
+        commands.add(new BotCommand(MENU, "You can choose option by button"));
         try {
             this.execute(new SetMyCommands(commands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
@@ -91,9 +105,18 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        if (update.hasCallbackQuery()) {
+            long buttonChatId = update.getCallbackQuery().getMessage().getChatId();
+            String callBackData = update.getCallbackQuery().getData();
+            if (callBackData.equals(MY_RENTALS)) {
+                sendCurrentRental(buttonChatId);
+            } else {
+                sendRentalHistory(buttonChatId);
+            }
+        }
+        long chatId = update.getMessage().getChatId();
         if (update.hasMessage() && update.getMessage().hasText()) {
             String message = update.getMessage().getText();
-            long chatId = update.getMessage().getChatId();
             switch (message) {
                 case START_COMMAND -> startCommandReceived(chatId, getName(update));
                 case REGISTER_COMMAND -> sendMessage(chatId, TIP_ABOUT_REGISTRATION_PATTERN);
@@ -101,6 +124,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 case END_RENTAL_COMMAND -> endRentalCommandReceived(chatId, getName(update));
                 case MY_RENTALS -> sendCurrentRental(chatId);
                 case MY_HISTORY -> sendRentalHistory(chatId);
+                case MENU -> sendKeyboard(chatId, CHOOSE_OPTION_MESSAGE);
                 default -> registerCommandReceived(chatId, update);
             }
         }
@@ -236,5 +260,41 @@ public class TelegramBot extends TelegramLongPollingBot {
         } else {
             sendMessage(chatId, currentRentals);
         }
+    }
+
+    @Scheduled(cron = "0 0 12 * * *")
+    private void sendRentalWillEndSoon() {
+        Set<Long> userIds = rentalRepository.findAll().stream()
+                .filter(Rental::isActive)
+                .filter(r -> r.getReturnDate().isEqual(LocalDate.now()))
+                .map(Rental::getUserId)
+                .collect(Collectors.toSet());
+        for (Long id : userIds) {
+            Long chatId = userRepository.findById(id).get().getChatId();
+            sendMessage(chatId, LAST_RENTAL_DAY_MESSAGE);
+        }
+    }
+
+    private void sendKeyboard(long chatId, String text) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        message.setText(text);
+
+        InlineKeyboardButton myHistoryButton = new InlineKeyboardButton();
+        myHistoryButton.setText("My history");
+        myHistoryButton.setCallbackData(MY_HISTORY);
+
+        InlineKeyboardButton myRentalsButton = new InlineKeyboardButton();
+        myRentalsButton.setText("My rentals");
+        myRentalsButton.setCallbackData(MY_RENTALS);
+
+        List<InlineKeyboardButton> rowInLine = new ArrayList<>();
+        rowInLine.add(myHistoryButton);
+        rowInLine.add(myRentalsButton);
+
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(List.of(rowInLine));
+        message.setReplyMarkup(markup);
+        executeMessage(message);
     }
 }
