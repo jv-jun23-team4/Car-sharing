@@ -73,7 +73,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     private static final String TIP_ABOUT_REGISTRATION_PATTERN =
             "Write your message according to the pattern: \n"
                     + "<email> <password>";
-    private static final String CURRENT_RENTALS_COMMAND = "currentRentals";
     private static final String UNREGISTERED_MESSAGE =
             "You are not registered. Please register to access your rental history.";
     private static final String SPACE_SPLITTER = " ";
