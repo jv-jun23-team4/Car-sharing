@@ -3,16 +3,22 @@ package com.example.car.sharing.service.payment;
 import com.example.car.sharing.dto.payment.PaymentRequest;
 import com.example.car.sharing.dto.payment.PaymentResponseDto;
 import com.example.car.sharing.exception.EntityNotFoundException;
+import com.example.car.sharing.model.Car;
 import com.example.car.sharing.model.Payment;
 import com.example.car.sharing.model.Rental;
+import com.example.car.sharing.model.User;
+import com.example.car.sharing.repository.CarRepository;
 import com.example.car.sharing.repository.PaymentRepository;
 import com.example.car.sharing.repository.RentalRepository;
+import com.example.car.sharing.repository.UserRepository;
+import com.example.car.sharing.service.NotificationService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +29,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class PaymentServiceImpl implements PaymentService {
+    private static final String PAYMENT_SUCCESS = """
+            Payment Confirmation: You have successfully rent a car.
+            Rent Details:
+              - Car: %s
+              - Rental Period: from %s to %s
+              - Total Price: $%s
+            Thank you for choosing our service!
+                        """;
     private static final Long EXPIRATION_TIME = Instant.now().plus(24, ChronoUnit.HOURS)
             .getEpochSecond();
     private static final String CURRENCY = "usd";
@@ -36,6 +50,9 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final RentalRepository rentalRepository;
     private final CalculateTotalPrice calculator;
+    private final NotificationService notificationService;
+    private final CarRepository carRepository;
+    private final UserRepository userRepository;
 
     @Value("${stripe.secret.key}")
     private String stripeSecretKey;
@@ -59,8 +76,8 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setSessionUrl(session.getUrl());
         payment.setSessionId(session.getId());
 
+        notificationAboutSuccessfulPayment(payment, rental);
         paymentRepository.save(payment);
-
         return new PaymentResponseDto(payment.getSessionUrl());
     }
 
@@ -125,5 +142,20 @@ public class PaymentServiceImpl implements PaymentService {
                                 .build()
                 )
                 .build();
+    }
+
+    private void notificationAboutSuccessfulPayment(Payment payment, Rental rental) {
+        Car car = carRepository.findById(rental.getCarId()).orElseThrow(
+                () -> new EntityNotFoundException("Can't find a car with id" + rental.getCarId())
+        );
+        User user = userRepository.findById(rental.getUserId()).orElseThrow(
+                () -> new EntityNotFoundException("Can't find a user with id" + rental.getUserId())
+        );
+        String carName = car.getBrand() + " " + car.getModel();
+        LocalDate returnDate = rental.getActualReturnDate() == null
+                ? rental.getReturnDate() : rental.getActualReturnDate();
+        String message = String.format(PAYMENT_SUCCESS, carName, rental.getRentalDate(), returnDate,
+                payment.getAmountToPay());
+        notificationService.sendMessage(user.getChatId(), message);
     }
 }
