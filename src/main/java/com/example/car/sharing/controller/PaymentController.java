@@ -1,8 +1,9 @@
 package com.example.car.sharing.controller;
 
 import com.example.car.sharing.dto.payment.PaymentRequest;
+import com.example.car.sharing.dto.payment.PaymentResponseDto;
 import com.example.car.sharing.model.Payment;
-import com.example.car.sharing.service.PaymentService;
+import com.example.car.sharing.service.payment.PaymentService;
 import com.stripe.exception.StripeException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +27,7 @@ public class PaymentController {
 
     @PostMapping("/")
     @Operation(summary = "Create a new payment session")
-    public String createPaymentSession(@RequestBody PaymentRequest paymentRequest)
+    public PaymentResponseDto createPaymentSession(@RequestBody PaymentRequest paymentRequest)
             throws StripeException {
         return paymentService.createPaymentSession(paymentRequest);
     }

@@ -2,11 +2,11 @@ package com.example.car.sharing.controller;
 
 import com.example.car.sharing.dto.rental.CreateRentalDto;
 import com.example.car.sharing.dto.rental.RentalDto;
+import com.example.car.sharing.dto.rental.SetActualReturnDateDto;
 import com.example.car.sharing.model.Rental;
 import com.example.car.sharing.service.RentalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,7 +56,7 @@ public class RentalController {
     @Operation(summary = "Set actual return date",
             description = "Set actual return date and increase car inventory by 1")
     public void setActualReturnDate(@PathVariable Long id,
-                                    @RequestBody LocalDate actualReturnDate) {
-        rentalService.setActualReturnDate(id, actualReturnDate);
+                                    @RequestBody SetActualReturnDateDto actualReturnDate) {
+        rentalService.setActualReturnDate(id, actualReturnDate.actualReturnDate());
     }
 }

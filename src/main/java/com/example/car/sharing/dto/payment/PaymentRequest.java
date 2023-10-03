@@ -1,6 +1,6 @@
 package com.example.car.sharing.dto.payment;
 
-import java.math.BigDecimal;
+import com.example.car.sharing.model.Payment.Type;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 public class PaymentRequest {
     private Long rentalId;
-    private BigDecimal amount;
+    private Type type;
 }
