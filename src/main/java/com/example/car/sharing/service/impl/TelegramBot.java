@@ -1,11 +1,15 @@
 package com.example.car.sharing.service.impl;
 
 import com.example.car.sharing.config.BotConfig;
+import com.example.car.sharing.model.Car;
 import com.example.car.sharing.model.Rental;
 import com.example.car.sharing.model.User;
+import com.example.car.sharing.repository.CarRepository;
 import com.example.car.sharing.repository.RentalRepository;
 import com.example.car.sharing.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
+import java.math.BigDecimal;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,16 +70,18 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final PasswordEncoder passwordEncoder;
     private List<BotCommand> commands;
     private final UserRepository userRepository;
+    private final CarRepository carRepository;
     private final RentalRepository rentalRepository;
 
     @PostConstruct
     private void initMenu() {
         commands = new ArrayList<>();
-        commands.add(new BotCommand(START_COMMAND, "send a welcome message"));
-        commands.add(new BotCommand(REGISTER_COMMAND, "authenticate user by email and password"));
-        commands.add(new BotCommand(NEW_RENTAL_COMMAND, "add a new rental"));
-        commands.add(new BotCommand(END_RENTAL_COMMAND, "end current rental"));
-        commands.add(new BotCommand(MY_RENTALS, "You can see your current rental or all history"));
+        commands.add(new BotCommand(START_COMMAND, "You can start work with bot"));
+        commands.add(new BotCommand(REGISTER_COMMAND, "You can authenticate yourself"));
+        commands.add(new BotCommand(NEW_RENTAL_COMMAND, "You can add a new rental"));
+        commands.add(new BotCommand(END_RENTAL_COMMAND, "You can end current rental"));
+        commands.add(new BotCommand(MY_RENTALS, "You can see all rental's history"));
+        commands.add(new BotCommand(MY_HISTORY, "You can see your current rental"));
         try {
             this.execute(new SetMyCommands(commands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
@@ -93,7 +99,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 case REGISTER_COMMAND -> sendMessage(chatId, TIP_ABOUT_REGISTRATION_PATTERN);
                 case NEW_RENTAL_COMMAND -> newRentalCommandReceived(chatId, getName(update));
                 case END_RENTAL_COMMAND -> endRentalCommandReceived(chatId, getName(update));
-                case MY_RENTALS -> openOptions(chatId);
+                case MY_RENTALS -> sendCurrentRental(chatId);
                 case MY_HISTORY -> sendRentalHistory(chatId);
                 default -> registerCommandReceived(chatId, update);
             }
@@ -171,12 +177,18 @@ public class TelegramBot extends TelegramLongPollingBot {
         Optional<User> user = userRepository.findByChatId(chatId);
         if (user.isPresent()) {
             List<Rental> rentals = rentalRepository.findByUserId(user.get().getId());
-            List<String> messages = new ArrayList<>();
-            for (Rental rental: rentals) {
-                messages.add(String.format(RENTAL_TEMPLATE));
-            }
-            String historyMessage = String.join(System.lineSeparator(), messages);
-            sendMessage(chatId, historyMessage);
+            sendRentalDetailsMessage(chatId, rentals);
+        } else {
+            sendMessage(chatId, UNREGISTERED_MESSAGE);
+        }
+    }
+
+    private void sendCurrentRental(long chatId) {
+        Optional<User> user = userRepository.findByChatId(chatId);
+        if (user.isPresent()) {
+            List<Rental> rentals = rentalRepository
+                    .findByUserIdAndIsActive(user.get().getId(), true);
+            sendRentalDetailsMessage(chatId, rentals);
         } else {
             sendMessage(chatId, UNREGISTERED_MESSAGE);
         }
@@ -202,5 +214,27 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private String getName(Update update) {
         return update.getMessage().getChat().getFirstName();
+    }
+
+    private String getRentalPrice(Car car, Rental rental) {
+        return String.valueOf(car.getDailyFee().multiply(
+                BigDecimal.valueOf(ChronoUnit.DAYS.between(
+                                rental.getRentalDate(), rental.getReturnDate()))));
+    }
+
+    private void sendRentalDetailsMessage(long chatId, List<Rental> rentals) {
+        List<String> messages = new ArrayList<>();
+        for (Rental rental: rentals) {
+            Car car = carRepository.getReferenceById(rental.getCarId());
+            String price = getRentalPrice(car, rental);
+            messages.add(String.format(RENTAL_TEMPLATE,
+                    car.getModel(), rental.getRentalDate(), rental.getReturnDate(), price));
+        }
+        String currentRentals = String.join(System.lineSeparator(), messages);
+        if (currentRentals.isEmpty()) {
+            sendMessage(chatId, "You don't have rentals yet");
+        } else {
+            sendMessage(chatId, currentRentals);
+        }
     }
 }
