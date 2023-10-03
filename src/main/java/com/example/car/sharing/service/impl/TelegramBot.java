@@ -174,29 +174,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    private void openOptions(long chatId) {
-        List<InlineKeyboardButton> keyboardRows = new ArrayList<>();
-
-        InlineKeyboardButton currentRental = new InlineKeyboardButton();
-        currentRental.setText("Current Rentals");
-        currentRental.setCallbackData(CURRENT_RENTALS_COMMAND);
-        keyboardRows.add(currentRental);
-
-        InlineKeyboardButton historyRental = new InlineKeyboardButton();
-        currentRental.setText("My History");
-        currentRental.setCallbackData("myHistory");
-        keyboardRows.add(historyRental);
-
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        keyboard.setKeyboard(List.of(keyboardRows));
-
-        SendMessage message = new SendMessage();
-        message.setText("Choose options");
-        message.setChatId(chatId);
-        message.setReplyMarkup(keyboard);
-        executeMessage(message);
-    }
-
     private void sendRentalHistory(long chatId) {
         Optional<User> user = userRepository.findByChatId(chatId);
         if (user.isPresent()) {
