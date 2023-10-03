@@ -25,14 +25,14 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping("/{id}/role")
-    @Operation(summary = "Update user role", description = "Endpoint for updating a users roles")
+    @Operation(summary = "Update user role", description = "Update user role by ID")
     public UserDto updateUserRoleById(@PathVariable Long id,
                                    @RequestBody UpdateUserRole updateUserRole) {
         return userService.updateUserRoleById(id, updateUserRole.getRole());
     }
 
     @GetMapping("/me")
-    @Operation(summary = "Get user info", description = "Endpoint for getting a user info")
+    @Operation(summary = "Get user info", description = "Get users' profile info")
     public UserDto getMyProfileInfo() {
         return userService.getUserById();
     }
