@@ -53,16 +53,10 @@ public class TelegramBot extends TelegramLongPollingBot {
             (dailyFee * 30%) will be charged to your account for each subsequent day.
             Return the cars on time :)
             """;
-    private static final String RENTAL_COMPLETED_MESSAGE =
-            ", your rental successfully completed.";
-    private static final String RENTAL_ENDED_MESSAGE =
-            ", your rental successfully closed.";
     private static final String CHOOSE_OPTION_MESSAGE =
             "Please, choose what you want to see";
     private static final String START_COMMAND = "/start";
     private static final String REGISTER_COMMAND = "/register";
-    private static final String NEW_RENTAL_COMMAND = "/new_rental";
-    private static final String END_RENTAL_COMMAND = "/end_rental";
     private static final String MY_RENTALS = "/my_rentals";
     private static final String MY_HISTORY = "/my_history";
     private static final String RENTALS_MENU = "/rentals_menu";
@@ -91,8 +85,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         commands = new ArrayList<>();
         commands.add(new BotCommand(START_COMMAND, "You can start work with bot"));
         commands.add(new BotCommand(REGISTER_COMMAND, "You can authenticate yourself"));
-        commands.add(new BotCommand(NEW_RENTAL_COMMAND, "You can add a new rental"));
-        commands.add(new BotCommand(END_RENTAL_COMMAND, "You can end current rental"));
         commands.add(new BotCommand(MY_RENTALS, "You can see all rental's history"));
         commands.add(new BotCommand(MY_HISTORY, "You can see your current rental"));
         commands.add(new BotCommand(RENTALS_MENU, "You can choose option by button"));
@@ -120,8 +112,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             switch (message) {
                 case START_COMMAND -> startCommandReceived(chatId, getName(update));
                 case REGISTER_COMMAND -> sendMessage(chatId, TIP_ABOUT_REGISTRATION_PATTERN);
-                case NEW_RENTAL_COMMAND -> newRentalCommandReceived(chatId, getName(update));
-                case END_RENTAL_COMMAND -> endRentalCommandReceived(chatId, getName(update));
                 case MY_RENTALS -> sendCurrentRental(chatId);
                 case MY_HISTORY -> sendRentalHistory(chatId);
                 case RENTALS_MENU -> sendKeyboard(chatId, CHOOSE_OPTION_MESSAGE);
@@ -193,16 +183,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         } else {
             sendMessage(chatId, UNREGISTERED_MESSAGE);
         }
-    }
-
-    private void newRentalCommandReceived(long chatId, String name) {
-        String answer = name + RENTAL_COMPLETED_MESSAGE;
-        sendMessage(chatId, answer);
-    }
-
-    private void endRentalCommandReceived(long chatId, String name) {
-        String answer = name + RENTAL_ENDED_MESSAGE;
-        sendMessage(chatId, answer);
     }
 
     private void executeMessage(SendMessage message) {
