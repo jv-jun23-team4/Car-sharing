@@ -9,3 +9,5 @@ databaseChangeLog:
       file: db/changelog/changes/04-create-payment-table.yaml
   - include:
       file: db/changelog/changes/05-insert-admin-user.yaml
+  - include:
+      file: db/changelog/changes/06-add-chat_id-column-into-users-table.yaml
