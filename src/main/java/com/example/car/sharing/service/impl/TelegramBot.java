@@ -47,12 +47,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         Return Date: %s
         Total Price: %s
             """;
-    private static final String LAST_RENTAL_DAY_MESSAGE = """
-            Hello.
-            Today is the last day of car rental. If you miss the return date, an additional fee
-            (dailyFee * 30%) will be charged to your account for each subsequent day.
-            Return the cars on time :)
-            """;
     private static final String CHOOSE_OPTION_MESSAGE =
             "Please, choose what you want to see";
     private static final String START_COMMAND = "/start";
@@ -220,19 +214,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             sendMessage(chatId, "You don't have rentals yet");
         } else {
             sendMessage(chatId, currentRentals);
-        }
-    }
-
-    @Scheduled(cron = "0 0 12 * * *")
-    private void sendRentalWillEndSoon() {
-        Set<Long> userIds = rentalRepository.findAll().stream()
-                .filter(Rental::isActive)
-                .filter(r -> r.getReturnDate().isEqual(LocalDate.now()))
-                .map(Rental::getUserId)
-                .collect(Collectors.toSet());
-        for (Long id : userIds) {
-            Long chatId = userRepository.findById(id).get().getChatId();
-            sendMessage(chatId, LAST_RENTAL_DAY_MESSAGE);
         }
     }
 
