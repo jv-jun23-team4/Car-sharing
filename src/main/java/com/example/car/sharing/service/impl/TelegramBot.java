@@ -1,6 +1,7 @@
 package com.example.car.sharing.service.impl;
 
 import com.example.car.sharing.config.BotConfig;
+import com.example.car.sharing.exception.EntityNotFoundException;
 import com.example.car.sharing.model.Car;
 import com.example.car.sharing.model.Rental;
 import com.example.car.sharing.model.User;
@@ -225,10 +226,14 @@ public class TelegramBot extends TelegramLongPollingBot {
     private void sendRentalDetailsMessage(long chatId, List<Rental> rentals) {
         List<String> messages = new ArrayList<>();
         for (Rental rental: rentals) {
-            Car car = carRepository.getReferenceById(rental.getCarId());
+            Car car = carRepository.findById(rental.getCarId()).orElseThrow(
+                    () -> new EntityNotFoundException("Can't find a car with id "
+                            + rental.getCarId())
+            );
             String price = getRentalPrice(car, rental);
             messages.add(String.format(RENTAL_TEMPLATE,
                     car.getModel(), rental.getRentalDate(), rental.getReturnDate(), price));
+            messages.add(System.lineSeparator());
         }
         String currentRentals = String.join(System.lineSeparator(), messages);
         if (currentRentals.isEmpty()) {
