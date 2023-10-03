@@ -88,8 +88,8 @@ public class PaymentServiceImpl implements PaymentService {
         return new SessionCreateParams.Builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("https://example.com/success")
-                .setCancelUrl("https://example.com/cancel")
+                .setSuccessUrl("http://localhost:8080/api/payments/success/")
+                .setCancelUrl("https://localhost:8080/api/payments/cancel/")
                 .addLineItem(
                         new SessionCreateParams.LineItem.Builder()
                                 .setQuantity(1L)
