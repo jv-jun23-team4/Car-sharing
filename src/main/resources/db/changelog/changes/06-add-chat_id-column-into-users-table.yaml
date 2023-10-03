@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-chat_id-column-into-users-table
+      author: YEvhenii Polishuchenko
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: chat_id
+                  type: bigint
+                  constraints:
+                    unique: true
+
