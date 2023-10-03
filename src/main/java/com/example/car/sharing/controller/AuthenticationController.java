@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Authentication",
+@Tag(name = "Authentication management",
         description = "Endpoints for registration and login")
 @RequiredArgsConstructor
 @RestController
@@ -26,14 +26,17 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    @Operation(summary = "Login user", description = "Login user with email and password, "
-            + "get JWT tokens")
+    @Operation(summary = "Login user", description = "Сheck whether the user's login "
+            + "and password are valid, and return the created JWT token")
     public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto request) {
         return authenticationService.authenticate(request);
     }
 
     @PostMapping(value = "/register")
-    @Operation(summary = "Register user", description = "Register user with user details")
+    @Operation(summary = "Register a new user", description = "Check whether there is no user "
+            + "with this email and whether the password and the repeated password match. "
+            + "Save the new user and his personal and authentication data and return "
+            + "information about the saved user")
     public UserRegistrationResponseDto register(@RequestBody @Valid
                                                     UserRegistrationRequestDto userRequestDto)
             throws RegistrationException {

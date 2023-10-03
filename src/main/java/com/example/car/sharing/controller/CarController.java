@@ -36,14 +36,14 @@ public class CarController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get a car", description = "Get car by ID")
+    @Operation(summary = "Get car by ID")
     public CarDto getById(@PathVariable Long id) {
         return carService.findById(id);
     }
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping
-    @Operation(summary = "Create a car", description = "Create a new car")
+    @Operation(summary = "Create a new car")
     public CarDto create(@RequestBody @Valid CreateCarDto createCarDto) {
         return carService.create(createCarDto);
     }
@@ -57,7 +57,7 @@ public class CarController {
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete a car", description = "Delete car by ID")
+    @Operation(summary = "Delete car by ID")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         carService.delete(id);

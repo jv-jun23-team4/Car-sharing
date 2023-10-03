@@ -25,21 +25,23 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/")
-    @Operation(summary = "Create a payment session", description = "Create a new payment session")
+    @Operation(summary = "Create a new payment session")
     public String createPaymentSession(@RequestBody PaymentRequest paymentRequest)
             throws StripeException {
         return paymentService.createPaymentSession(paymentRequest);
     }
 
     @GetMapping("/{user_id}")
-    @Operation(summary = "Get payments", description = "Get users payments by users ID")
+    @Operation(summary = "Get users payments by users ID",
+            description = "Get list of all users payments by users ID")
     public List<Payment> getPaymentsByUserId(@PathVariable("user_id") Long userId) {
         return paymentService.getPaymentsByUserId(userId);
     }
 
     @GetMapping("/success/")
     @Operation(summary = "Handle successful Stripe payments",
-            description = "Check successful Stripe payments (Endpoint for stripe redirection)")
+            description = "Receive a response about a successful payment from Stripe, set "
+                    + "payment status: PAID and return a successful payment message to the user")
     public ResponseEntity<String> handleSuccessfulPayment(
             @RequestParam("session_id") String sessionId)
             throws StripeException {
@@ -49,7 +51,8 @@ public class PaymentController {
 
     @GetMapping("/cancel/")
     @Operation(summary = "Handle unsuccessful Stripe payments",
-            description = "Return payment paused message (Endpoint for stripe redirection)")
+            description = "Receive a response about canceled payment from Stripe, set payment "
+                    + "status: CANCELED and return a canceled payment message to the user")
     public ResponseEntity<String> handleCanceledPayment(
             @RequestParam("session_id") String sessionId) {
         paymentService.handleCanceledPayment(sessionId);

@@ -26,8 +26,9 @@ public class RentalController {
     private final RentalService rentalService;
 
     @PostMapping
-    @Operation(summary = "Add rental",
-            description = "Add a new rental and decrease car inventory by 1")
+    @Operation(summary = "Add a new rental",
+            description = "Add a new rental to the selected car if it's available"
+                    + " and reduce the car inventory by 1")
     public RentalDto addRental(@RequestBody CreateRentalDto rental) {
         return rentalService.addRental(rental);
     }
@@ -35,7 +36,8 @@ public class RentalController {
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping
     @Operation(summary = "Get rentals by user ID and its status",
-            description = "Get rentals by user ID and whether the rental is still active or not")
+            description = "Get list of all rentals by user ID and "
+                    + "whether the rental is still active or not")
     public List<Rental> getRentalsByUserIdAndStatus(
             @RequestParam(name = "user_id") Long userId,
             @RequestParam(name = "is_active", defaultValue = "true") Boolean isActive) {
@@ -44,7 +46,7 @@ public class RentalController {
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping("/{id}")
-    @Operation(summary = "Get specific rental", description = "Get rental by ID")
+    @Operation(summary = "Get specific rental by ID")
     public Rental getRentalById(@PathVariable Long id) {
         return rentalService.getRentalById(id);
     }
@@ -52,7 +54,7 @@ public class RentalController {
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/{id}/return")
     @Operation(summary = "Set actual return date",
-            description = "Set actual return date (increase car inventory by 1)")
+            description = "Set actual return date and increase car inventory by 1")
     public void setActualReturnDate(@PathVariable Long id,
                                     @RequestBody LocalDate actualReturnDate) {
         rentalService.setActualReturnDate(id, actualReturnDate);
