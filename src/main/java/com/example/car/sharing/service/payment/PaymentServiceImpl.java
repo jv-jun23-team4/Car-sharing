@@ -42,10 +42,12 @@ public class PaymentServiceImpl implements PaymentService {
             .getEpochSecond();
     private static final String CURRENCY = "usd";
     private static final String LINE_ITEM_NAME = "Payment";
+    private static final String PAYMENT_URL =
+            "http://ec2-13-53-170-220.eu-north-1.compute.amazonaws.com/api/payments";
     private static final String CANCEL_URL
-            = "http://localhost:8080/api/payments/cancel/?session_id={CHECKOUT_SESSION_ID}";
+            = "/cancel/?session_id={CHECKOUT_SESSION_ID}";
     private static final String SUCCESS_URL
-            = "http://localhost:8080/api/payments/success/?session_id={CHECKOUT_SESSION_ID}";
+            = "/success/?session_id={CHECKOUT_SESSION_ID}";
     private static final Long MAX_QUANTITY = 1L;
     private static final String MULTIPLY_UNIT_AMOUNT = "100";
     private final PaymentRepository paymentRepository;
@@ -168,8 +170,8 @@ public class PaymentServiceImpl implements PaymentService {
         return new SessionCreateParams.Builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl(SUCCESS_URL)
-                .setCancelUrl(CANCEL_URL)
+                .setSuccessUrl(PAYMENT_URL + SUCCESS_URL)
+                .setCancelUrl(PAYMENT_URL + CANCEL_URL)
                 .setExpiresAt(EXPIRATION_TIME)
                 .addLineItem(
                         new SessionCreateParams.LineItem.Builder()
