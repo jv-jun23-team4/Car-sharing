@@ -9,6 +9,8 @@ import java.util.List;
 public interface PaymentService {
     PaymentResponseDto createPaymentSession(PaymentRequest paymentRequest) throws StripeException;
 
+    PaymentResponseDto renewPaymentSession(String sessionId) throws StripeException;
+
     List<Payment> getPaymentsByUserId(Long userId);
 
     void handleSuccessfulPayment(String sessionId) throws StripeException;
