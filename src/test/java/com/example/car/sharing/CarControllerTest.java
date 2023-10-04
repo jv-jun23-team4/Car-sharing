@@ -1,5 +1,8 @@
 package com.example.car.sharing;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -22,7 +25,6 @@ import javax.sql.DataSource;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -140,8 +142,8 @@ public class CarControllerTest {
 
         CarDto[] actual = objectMapper.readValue(
                 result.getResponse().getContentAsByteArray(), CarDto[].class);
-        Assertions.assertEquals(EXPECTED_LENGTH, actual.length);
-        Assertions.assertEquals(expected, Arrays.stream(actual).toList());
+        assertEquals(EXPECTED_LENGTH, actual.length);
+        assertEquals(expected, Arrays.stream(actual).toList());
     }
 
     @WithMockUser(username = "manager", roles = {"MANAGER"})
@@ -175,11 +177,11 @@ public class CarControllerTest {
                 .andReturn();
 
         CarDto actual = objectMapper.readValue(
-                result.getResponse()
-                        .getContentAsString(), CarDto.class);
-        Assertions.assertNotNull(actual);
-        Assertions.assertNotNull(actual.getId());
-        EqualsBuilder.reflectionEquals(expected, actual,EXCLUDE_FIELD);
+                result.getResponse().getContentAsString(), CarDto.class);
+
+        assertNotNull(actual);
+        assertNotNull(actual.getId());
+        assertTrue(EqualsBuilder.reflectionEquals(expected, actual, EXCLUDE_FIELD));
     }
 
     @WithMockUser(username = "customer", roles = {"CUSTOMER"})
@@ -194,8 +196,8 @@ public class CarControllerTest {
 
         CarDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), CarDto.class);
-        Assertions.assertNotNull(actual);
-        Assertions.assertEquals(FIRST_CAR_ID, actual.getId());
+        assertNotNull(actual);
+        assertEquals(FIRST_CAR_ID, actual.getId());
     }
 
     @WithMockUser(username = "manager", roles = {"MANAGER"})
@@ -221,8 +223,8 @@ public class CarControllerTest {
 
         UpdateCarDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), UpdateCarDto.class);
-        Assertions.assertEquals(updateDto.getInventory(), actual.getInventory());
-        Assertions.assertEquals(updateDto.getDailyFee(), actual.getDailyFee());
+        assertEquals(updateDto.getInventory(), actual.getInventory());
+        assertEquals(updateDto.getDailyFee(), actual.getDailyFee());
     }
 
     @WithMockUser(username = "manager", roles = {"MANAGER"})

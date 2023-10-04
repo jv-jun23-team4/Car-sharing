@@ -1,6 +1,8 @@
 package com.example.car.sharing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.times;
@@ -18,7 +20,6 @@ import com.example.car.sharing.service.impl.CarServiceImpl;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -85,20 +86,20 @@ class CarServiceTest {
         when(carMapper.toDto(car)).thenReturn(carDto);
 
         CarDto result = carService.findById(USER_ID);
-        Assertions.assertEquals(carDto, result);
+        assertEquals(carDto, result);
     }
 
     @Test
     @DisplayName("Fetching a car by its ID throws an exception when it doesn't exist")
     void findById_WhenCarDoesntExist_ShouldThrowException() {
         when(carRepository.findById(USER_ID)).thenReturn(Optional.empty());
-        Exception exception = Assertions.assertThrows(
+        Exception exception = assertThrows(
                 EntityNotFoundException.class,
                 () -> carService.findById(USER_ID));
 
         String expected = EXCEPTION_MESSAGE + USER_ID;
         String actual = exception.getMessage();
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -156,12 +157,12 @@ class CarServiceTest {
 
         when(carRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Exception exception = Assertions.assertThrows(
+        Exception exception = assertThrows(
                         EntityNotFoundException.class,
                         () -> carService.update(USER_ID, updateCarDto));
         String expected = EXCEPTION_MESSAGE + USER_ID;
         String actual = exception.getMessage();
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -174,10 +175,10 @@ class CarServiceTest {
     @Test
     @DisplayName("Trying to delete a non-existent car throws an exception")
     void delete_WhenCarDoesntExist_ShouldThrowException() {
-        Exception exception = Assertions.assertThrows(EntityNotFoundException.class,
+        Exception exception = assertThrows(EntityNotFoundException.class,
                 () -> carService.delete(USER_ID));
         String expected = EXCEPTION_MESSAGE + USER_ID;
         String actual = exception.getMessage();
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 }
