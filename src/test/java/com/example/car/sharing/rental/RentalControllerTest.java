@@ -118,6 +118,35 @@ public class RentalControllerTest {
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
     )
     @DisplayName("Get rental by user id and status")
+    void getByUserIdAndIsActive_ValidData_ReturnsEmptyList() throws Exception {
+        MvcResult result = mockMvc.perform(get("/rentals?user_id=10")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        RentalDto[] actual = objectMapper.readValue(
+                result.getResponse().getContentAsByteArray(), RentalDto[].class);
+        assertEquals(0, actual.length);
+    }
+
+    @WithMockUser(username = "manager", roles = {"MANAGER"})
+    @Test
+    @Sql(
+            scripts = {
+                    PATH_FOR_ADD_MANAGER_SCRIPT,
+                    PATH_FOR_ADD_DEFAULT_CARS_SCRIPT,
+                    PATH_FOR_ADD_RENTAL_SCRIPT},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
+    @Sql(
+            scripts = {
+                    PATH_FOR_DELETE_RENTAL_SCRIPT,
+                    PATH_FOR_DELETE_USERS_SCRIPT,
+                    PATH_FOR_DELETE_ALL_CARS_SCRIPT
+            },
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+    )
+    @DisplayName("Get rental by user id and status")
     void getById_ValidId_ReturnsExpectedRental() throws Exception {
         RentalDto rentalDto = new RentalDto();
         rentalDto.setUserId(MANAGER_ID);
