@@ -9,12 +9,12 @@ import com.example.car.sharing.model.Rental;
 import com.example.car.sharing.model.User;
 import com.example.car.sharing.repository.CarRepository;
 import com.example.car.sharing.repository.RentalRepository;
+import com.example.car.sharing.repository.UserRepository;
 import com.example.car.sharing.service.NotificationService;
 import com.example.car.sharing.service.RentalService;
 import com.example.car.sharing.service.UserService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class RentalServiceImpl implements RentalService {
             We are excited to inform you about your new rental details:
             Car Model: %s
             Return Date: %s
-            Total Price: %s      
+            Total Price: %s
             Thank you for choosing our service!
             """;
     private final RentalRepository rentalRepository;
@@ -36,6 +36,8 @@ public class RentalServiceImpl implements RentalService {
     private final CarRepository carRepository;
     private final UserService userService;
     private final NotificationService notificationService;
+    private final UserRepository userRepository;
+    private final TelegramBot telegramBot;
 
     @Override
     @Transactional
@@ -63,7 +65,8 @@ public class RentalServiceImpl implements RentalService {
         newRental.setRentalDate(LocalDate.now());
         newRental.setReturnDate(createRentalDto.getReturnDate());
         try {
-            sendNotificationOfNewRental(userService.getAuthenticatedUser(), newRental);
+            sendNotificationOfNewRentalToUser(userService.getAuthenticatedUser(), newRental);
+            sendNotificationOfNewRentalToAdmins(newRental);
         } catch (Exception e) {
             System.out.println("Error occurred while executing notification in rental service: "
                     + e.getMessage());
@@ -105,7 +108,7 @@ public class RentalServiceImpl implements RentalService {
         carRepository.save(car);
     }
 
-    private void sendNotificationOfNewRental(User user, Rental rental) {
+    private void sendNotificationOfNewRentalToUser(User user, Rental rental) {
         if (user.getChatId() == null) {
             return;
         }
@@ -113,11 +116,23 @@ public class RentalServiceImpl implements RentalService {
         String carName = car.getBrand() + " " + car.getModel();
 
         LocalDate returnDate = rental.getReturnDate();
-        LocalDate rentalDate = rental.getRentalDate();
 
-        long daysDifference = ChronoUnit.DAYS.between(rentalDate, returnDate);
-        BigDecimal price = car.getDailyFee().multiply(BigDecimal.valueOf(daysDifference));
+        BigDecimal price = telegramBot.getRentalPrice(car, rental);
         notificationService.sendMessage(user.getChatId(),
                 String.format(NOTIFICATION_NEW_RENTAL, carName, returnDate, price));
+    }
+
+    private void sendNotificationOfNewRentalToAdmins(Rental rental) {
+        List<User> admins = userRepository.findAllByRole(User.UserRole.MANAGER);
+        Car car = carRepository.findById(rental.getCarId()).get();
+        String carName = car.getBrand() + " " + car.getModel();
+
+        LocalDate returnDate = rental.getReturnDate();
+
+        BigDecimal price = telegramBot.getRentalPrice(car, rental);
+        for (User admin : admins) {
+            notificationService.sendMessage(admin.getChatId(),
+                    String.format(NOTIFICATION_NEW_RENTAL, carName, returnDate, price));
+        }
     }
 }

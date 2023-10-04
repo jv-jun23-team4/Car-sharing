@@ -37,12 +37,12 @@ public class TelegramBot extends TelegramLongPollingBot {
             and receive notifications about the status of your rental.
             """;
     private static final String RENTAL_TEMPLATE = """
-        Rental Details:
-        Car Model: %s
-        Rental Date: %s
-        Return Date: %s
-        Total Price: %s
-            """;
+            Rental Details:
+            Car Model: %s
+            Rental Date: %s
+            Return Date: %s
+            Total Price: %s
+                """;
     private static final String CHOOSE_OPTION_MESSAGE =
             "Please, choose what you want to see";
     private static final String START_COMMAND = "/start";
@@ -143,8 +143,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                 userRepository.findByEmail(userData[EMAIL_INDEX]);
         if (optionalUser.isPresent()
                 && passwordEncoder.matches(
-                        userData[PASSWORD_INDEX],
-                        optionalUser.get().getPassword())) {
+                userData[PASSWORD_INDEX],
+                optionalUser.get().getPassword())) {
 
             User user = optionalUser.get();
             user.setChatId(chatId);
@@ -187,20 +187,14 @@ public class TelegramBot extends TelegramLongPollingBot {
         return update.getMessage().getChat().getFirstName();
     }
 
-    private String getRentalPrice(Car car, Rental rental) {
-        return String.valueOf(car.getDailyFee().multiply(
-                BigDecimal.valueOf(ChronoUnit.DAYS.between(
-                                rental.getRentalDate(), rental.getReturnDate()))));
-    }
-
     private void sendRentalDetailsMessage(long chatId, List<Rental> rentals) {
         List<String> messages = new ArrayList<>();
-        for (Rental rental: rentals) {
+        for (Rental rental : rentals) {
             Car car = carRepository.findById(rental.getCarId()).orElseThrow(
                     () -> new EntityNotFoundException("Can't find a car with id "
                             + rental.getCarId())
             );
-            String price = getRentalPrice(car, rental);
+            BigDecimal price = getRentalPrice(car, rental);
             messages.add(String.format(RENTAL_TEMPLATE,
                     car.getModel(), rental.getRentalDate(), rental.getReturnDate(), price));
             messages.add(System.lineSeparator());
@@ -234,5 +228,11 @@ public class TelegramBot extends TelegramLongPollingBot {
         markup.setKeyboard(List.of(rowInLine));
         message.setReplyMarkup(markup);
         executeMessage(message);
+    }
+
+    public BigDecimal getRentalPrice(Car car, Rental rental) {
+        return car.getDailyFee().multiply(
+                BigDecimal.valueOf(ChronoUnit.DAYS.between(
+                        rental.getRentalDate(), rental.getReturnDate())));
     }
 }
