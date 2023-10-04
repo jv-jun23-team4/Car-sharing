@@ -37,7 +37,7 @@ public class UserController {
     @Operation(summary = "Get user info", description = "The user can view "
             + "information from the user's profile")
     public UserDto getMyProfileInfo() {
-        return userService.getUserById();
+        return userService.getUserInfo();
     }
 
     @PatchMapping("/me")

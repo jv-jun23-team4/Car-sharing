@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -38,6 +39,8 @@ public class RentalServiceImpl implements RentalService {
     private final UserRepository userRepository;
     private final TelegramBot telegramBot;
 
+    @Override
+    @Transactional
     public RentalDto addRental(CreateRentalDto createRentalDto) {
         Car car = carRepository.findById(createRentalDto.getCarId())
                 .orElseThrow(() -> new EntityNotFoundException("Car not found with id: "
@@ -71,10 +74,13 @@ public class RentalServiceImpl implements RentalService {
         return rentalMapper.toDto(rentalRepository.save(newRental));
     }
 
+    @Override
     public List<Rental> getRentalsByUserIdAndStatus(Long userId, Boolean isActive) {
         return rentalRepository.findByUserIdAndIsActive(userId, isActive);
     }
 
+    @Override
+    @Transactional
     public Rental getRentalById(Long id) {
         return rentalRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Rental not found with id: " + id));
