@@ -32,6 +32,13 @@ public class PaymentController {
         return paymentService.createPaymentSession(paymentRequest);
     }
 
+    @PostMapping("")
+    @Operation(summary = "Renew a payment session by session ID")
+    public PaymentResponseDto renewPaymentSession(@RequestParam String sessionId)
+            throws StripeException {
+        return paymentService.renewPaymentSession(sessionId);
+    }
+
     @GetMapping("/{user_id}")
     @Operation(summary = "Get users payments by users ID",
             description = "Get list of all users payments by users ID")

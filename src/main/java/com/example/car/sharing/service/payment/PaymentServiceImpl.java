@@ -80,7 +80,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setExpiredTime(Instant.ofEpochSecond(session.getExpiresAt()));
 
         try {
-            notificationAboutSuccessfulPayment(payment, rental);
+            notificationAboutCreatingPayment(payment, rental);
         } catch (Exception e) {
             System.out.println("Error occurred while executing notification in payment service: "
                     + e.getMessage());
@@ -90,6 +90,44 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(payment);
         return new PaymentResponseDto(payment.getStatus(), payment.getSessionUrl(),
                 payment.getSessionId(), payment.getAmountToPay());
+    }
+
+    @Override
+    @Transactional
+    public PaymentResponseDto renewPaymentSession(String sessionId) throws StripeException {
+        Payment originalPayment = getPaymentBySessionId(sessionId);
+
+        if (originalPayment.getExpiredTime().isBefore(Instant.now())) {
+            Rental rental = originalPayment.getRental();
+
+            Payment renewedPayment = new Payment();
+            renewedPayment.setRental(rental);
+            renewedPayment.setStatus(Payment.Status.PENDING);
+            renewedPayment.setType(originalPayment.getType());
+            renewedPayment.setAmountToPay(calculator.calculate(renewedPayment));
+
+            SessionCreateParams params = createStripeSession(renewedPayment);
+            Session session = Session.create(params);
+            renewedPayment.setSessionUrl(session.getUrl());
+            renewedPayment.setSessionId(session.getId());
+            renewedPayment.setExpiredTime(Instant.ofEpochSecond(session.getExpiresAt()));
+
+            try {
+                notificationAboutCreatingPayment(renewedPayment, rental);
+            } catch (Exception e) {
+                System.out.println(
+                        "Error occurred while executing notification in payment service: "
+                        + e.getMessage());
+            }
+
+            paymentRepository.save(renewedPayment);
+            return new PaymentResponseDto(renewedPayment.getStatus(),
+                    renewedPayment.getSessionUrl(),
+                    renewedPayment.getSessionId(), renewedPayment.getAmountToPay());
+        } else {
+            throw new EntityNotFoundException(
+                    "Original payment session is still valid and cannot be renewed.");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -156,7 +194,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
     }
 
-    private void notificationAboutSuccessfulPayment(Payment payment, Rental rental) {
+    private void notificationAboutCreatingPayment(Payment payment, Rental rental) {
         Car car = carRepository.findById(rental.getCarId()).orElseThrow(
                 () -> new EntityNotFoundException("Can't find a car with id" + rental.getCarId())
         );
