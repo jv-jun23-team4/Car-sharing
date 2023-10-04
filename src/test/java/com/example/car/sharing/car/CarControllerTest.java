@@ -117,7 +117,6 @@ public class CarControllerTest {
         }
     }
 
-    @WithMockUser(username = "customer", roles = {"CUSTOMER"})
     @Test
     @DisplayName("Test getting all cars")
     public void getAllCars_WithDefaultPage_ReturnsOk() throws Exception {

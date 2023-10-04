@@ -32,14 +32,14 @@ public class RentalServiceImpl implements RentalService {
             Thank you for choosing our service!
             """;
     private final RentalRepository rentalRepository;
+    private final RentalMapper rentalMapper;
     private final CarRepository carRepository;
     private final UserService userService;
-    private final RentalMapper rentalMapper;
     private final NotificationService notificationService;
 
     @Override
     @Transactional
-    public RentalDto addRental(CreateRentalDto createRentalDto) {
+    public RentalDto create(CreateRentalDto createRentalDto) {
         Car car = carRepository.findById(createRentalDto.getCarId())
                 .orElseThrow(() -> new EntityNotFoundException("Car not found with id: "
                         + createRentalDto.getCarId()));
@@ -72,17 +72,27 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public List<Rental> getRentalsByUserIdAndStatus(Long userId, Boolean isActive) {
-        return rentalRepository.findByUserIdAndIsActive(userId, isActive);
+    public List<RentalDto> getByUserIdAndStatus(Long userId, Boolean isActive) {
+        return rentalRepository.findByUserIdAndIsActive(userId, isActive).stream()
+                .map(rentalMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<RentalDto> getAll() {
+        return rentalRepository.findAll().stream()
+                .map(rentalMapper::toDto)
+                .toList();
     }
 
     @Override
     @Transactional
-    public Rental getRentalById(Long id) {
-        return rentalRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Rental not found with id: " + id));
+    public RentalDto getById(Long id) {
+        return rentalMapper.toDto(rentalRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Rental not found with id: " + id)));
     }
 
+    @Override
     public void setActualReturnDate(Long id, LocalDate actualReturnDate) {
         Rental rental = rentalRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Rental not found with id: " + id));
