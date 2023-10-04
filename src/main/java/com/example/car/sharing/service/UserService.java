@@ -15,7 +15,7 @@ public interface UserService {
   
     UserDto updateUserRoleById(Long id, User.UserRole role);
   
-    UserDto getUserById();
+    UserDto getUserInfo();
   
     UserDto update(UpdateUserData updateUserData);
 }

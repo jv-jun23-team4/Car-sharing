@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -43,6 +44,7 @@ public class CarServiceImpl implements CarService {
         return carMapper.toDto(carRepository.save(car));
     }
 
+    @Transactional
     @Override
     public CarDto update(Long id, UpdateCarDto updateCarDto) {
         Car existingCar = carRepository.findById(id)
@@ -52,6 +54,7 @@ public class CarServiceImpl implements CarService {
         return carMapper.toDto(carRepository.save(existingCar));
     }
 
+    @Transactional
     @Override
     public void delete(Long id) {
         if (!carRepository.existsById(id)) {

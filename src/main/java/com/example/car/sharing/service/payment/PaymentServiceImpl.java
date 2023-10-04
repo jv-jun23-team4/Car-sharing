@@ -25,6 +25,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -57,6 +58,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Value("${stripe.secret.key}")
     private String stripeSecretKey;
 
+    @Transactional
     public PaymentResponseDto createPaymentSession(PaymentRequest paymentRequest)
             throws StripeException {
         Stripe.apiKey = stripeSecretKey;
@@ -77,13 +79,20 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setSessionId(session.getId());
         payment.setExpiredTime(Instant.ofEpochSecond(session.getExpiresAt()));
 
-        notificationAboutSuccessfulPayment(payment, rental);
+        try {
+            notificationAboutSuccessfulPayment(payment, rental);
+        } catch (Exception e) {
+            System.out.println("Error occurred while executing notification in payment service: "
+                    + e.getMessage());
+        }
         rental.setActive(false);
         rentalRepository.save(rental);
         paymentRepository.save(payment);
-        return new PaymentResponseDto(payment.getSessionUrl());
+        return new PaymentResponseDto(payment.getStatus(), payment.getSessionUrl(),
+                payment.getSessionId(), payment.getAmountToPay());
     }
 
+    @Transactional(readOnly = true)
     public List<Payment> getPaymentsByUserId(Long userId) {
         List<Rental> rentals = rentalRepository.findByUserId(userId);
         List<Payment> payments = new ArrayList<>();

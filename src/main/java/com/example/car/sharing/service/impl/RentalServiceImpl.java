@@ -18,6 +18,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -36,6 +37,8 @@ public class RentalServiceImpl implements RentalService {
     private final RentalMapper rentalMapper;
     private final NotificationService notificationService;
 
+    @Override
+    @Transactional
     public RentalDto addRental(CreateRentalDto createRentalDto) {
         Car car = carRepository.findById(createRentalDto.getCarId())
                 .orElseThrow(() -> new EntityNotFoundException("Car not found with id: "
@@ -59,14 +62,22 @@ public class RentalServiceImpl implements RentalService {
         newRental.setCarId(car.getId());
         newRental.setRentalDate(LocalDate.now());
         newRental.setReturnDate(createRentalDto.getReturnDate());
-        sendNotificationOfNewRental(userService.getAuthenticatedUser(), newRental);
+        try {
+            sendNotificationOfNewRental(userService.getAuthenticatedUser(), newRental);
+        } catch (Exception e) {
+            System.out.println("Error occurred while executing notification in rental service: "
+                    + e.getMessage());
+        }
         return rentalMapper.toDto(rentalRepository.save(newRental));
     }
 
+    @Override
     public List<Rental> getRentalsByUserIdAndStatus(Long userId, Boolean isActive) {
         return rentalRepository.findByUserIdAndIsActive(userId, isActive);
     }
 
+    @Override
+    @Transactional
     public Rental getRentalById(Long id) {
         return rentalRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Rental not found with id: " + id));
