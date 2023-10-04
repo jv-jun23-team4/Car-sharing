@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.car.sharing.dto.rental.CreateRentalDto;
@@ -33,6 +35,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class RentalServiceTest {
+    private static final int ONE_INVOCATION = 1;
+    private static final int TWO_INVOCATIONS = 2;
     private static final Long VALID_ID = 1L;
     private static final String BRAND = "Audi";
     private static final String MODEL = "Q7";
@@ -143,6 +147,9 @@ public class RentalServiceTest {
         when(rentalMapper.toDto(any())).thenReturn(rentalDto);
 
         assertEquals(rentalDto, rentalService.create(createRentalDto));
+        verify(carRepository, times(TWO_INVOCATIONS)).findById(anyLong());
+        verify(rentalRepository, times(ONE_INVOCATION)).findByUserId(anyLong());
+        verify(rentalRepository, times(ONE_INVOCATION)).save(any());
     }
 
     @Test
@@ -153,6 +160,8 @@ public class RentalServiceTest {
         when(rentalRepository.findByUserId(anyLong())).thenReturn(activeRentals);
 
         assertThrows(EntityNotFoundException.class, () -> rentalService.create(createRentalDto));
+        verify(carRepository, times(ONE_INVOCATION)).findById(anyLong());
+        verify(rentalRepository, times(ONE_INVOCATION)).findByUserId(anyLong());
     }
 
     @Test
@@ -163,6 +172,7 @@ public class RentalServiceTest {
         when(rentalMapper.toDto(any())).thenReturn(activeRentalDto);
 
         assertEquals(rentalService.getByUserIdAndStatus(VALID_ID, true), acitveRentalsDtos);
+        verify(rentalRepository, times(ONE_INVOCATION)).findByUserIdAndIsActive(user.getId(), true);
     }
 
     @Test
@@ -172,6 +182,7 @@ public class RentalServiceTest {
         when(rentalMapper.toDto(any())).thenReturn(activeRentalDto);
 
         assertEquals(rentalService.getAll(), acitveRentalsDtos);
+        verify(rentalRepository, times(ONE_INVOCATION)).findAll();
     }
 
     @Test
@@ -181,6 +192,7 @@ public class RentalServiceTest {
         when(rentalMapper.toDto(any())).thenReturn(activeRentalDto);
 
         assertEquals(rentalService.getById(activeRental.getId()), activeRentalDto);
+        verify(rentalRepository, times(ONE_INVOCATION)).findById(anyLong());
     }
 
     @Test
@@ -190,5 +202,6 @@ public class RentalServiceTest {
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(audi));
 
         assertDoesNotThrow(() -> rentalService.setActualReturnDate(VALID_ID, RETURN_DATE));
+        verify(rentalRepository, times(ONE_INVOCATION)).findById(anyLong());
     }
 }
