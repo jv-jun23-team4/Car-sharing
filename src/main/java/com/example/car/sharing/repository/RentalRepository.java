@@ -7,10 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface RentalRepository extends JpaRepository<Rental, Long> {
     List<Rental> findByUserId(Long userId);
-  
+
     @Query("FROM Rental r WHERE r.userId = :userId AND r.isActive = :isActive")
     List<Rental> findByUserIdAndIsActive(Long userId, boolean isActive);
-
-    @Query("FROM Rental r WHERE r.isActive = :isActive")
-    List<Rental> findByIsActive(boolean isActive);
 }
