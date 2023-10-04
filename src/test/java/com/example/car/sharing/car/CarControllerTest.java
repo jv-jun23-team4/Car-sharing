@@ -1,4 +1,4 @@
-package com.example.car.sharing;
+package com.example.car.sharing.car;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
