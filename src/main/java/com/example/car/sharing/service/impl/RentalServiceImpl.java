@@ -61,8 +61,13 @@ public class RentalServiceImpl implements RentalService {
         newRental.setCarId(car.getId());
         newRental.setRentalDate(LocalDate.now());
         newRental.setReturnDate(createRentalDto.getReturnDate());
-        sendNotificationOfNewRentalToAdmins(newRental);
-        sendNotificationOfNewRentalToUser(userService.getAuthenticatedUser(), newRental);
+        try {
+            sendNotificationOfNewRentalToUser(userService.getAuthenticatedUser(), newRental);
+            sendNotificationOfNewRentalToAdmins(newRental);
+        } catch (Exception e) {
+            System.out.println("Error occurred while executing notification in rental service: "
+                    + e.getMessage());
+        }
         return rentalMapper.toDto(rentalRepository.save(newRental));
     }
 
