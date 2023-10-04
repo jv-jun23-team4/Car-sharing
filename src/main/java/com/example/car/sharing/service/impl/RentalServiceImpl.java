@@ -131,6 +131,9 @@ public class RentalServiceImpl implements RentalService {
 
         BigDecimal price = telegramBot.getRentalPrice(car, rental);
         for (User admin : admins) {
+            if (admin.getChatId() == null) {
+                continue;
+            }
             notificationService.sendMessage(admin.getChatId(),
                     String.format(NOTIFICATION_NEW_RENTAL, carName, returnDate, price));
         }
