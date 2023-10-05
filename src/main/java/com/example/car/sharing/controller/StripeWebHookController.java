@@ -116,8 +116,8 @@ public class StripeWebHookController {
     private void sendNotificationAboutSucceededPayment(JsonNode payloadNode) {
         String email = payloadNode.at("/data/object/customer_details/email").asText();
         Optional<User> userOptional = userRepository.findByEmail(email);
-        String amount_total = payloadNode.at("/data/object/amount_total").asText();
-        Integer price = Integer.parseInt(amount_total) / 100;
+        String amountTotal = payloadNode.at("/data/object/amount_total").asText();
+        Integer price = Integer.parseInt(amountTotal) / 100;
         userOptional.ifPresent(
                 user -> notificationService.sendMessage(
                         user.getChatId(),
