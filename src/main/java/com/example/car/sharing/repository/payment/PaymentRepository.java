@@ -1,4 +1,4 @@
-package com.example.car.sharing.repository;
+package com.example.car.sharing.repository.payment;
 
 import com.example.car.sharing.model.Payment;
 import com.example.car.sharing.model.Rental;
