@@ -1,4 +1,4 @@
-package com.example.car.sharing.repository;
+package com.example.car.sharing.repository.rental;
 
 import com.example.car.sharing.model.Rental;
 import java.util.List;
