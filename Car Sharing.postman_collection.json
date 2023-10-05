@@ -76,6 +76,50 @@
 						"header": []
 					},
 					"response": []
+				},
+				{
+					"name": "RENEW SESSION",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/payments?sessionId=cs_test_a16tWvXywd22UmiWPRljygucLSLqczi9X2YUDzHsnXKxfNGbgo18RuXcan",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"payments"
+							],
+							"query": [
+								{
+									"key": "sessionId",
+									"value": "cs_test_a16tWvXywd22UmiWPRljygucLSLqczi9X2YUDzHsnXKxfNGbgo18RuXcan"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		},
@@ -112,7 +156,7 @@
 					"response": []
 				},
 				{
-					"name": "GET",
+					"name": "GET ALL",
 					"request": {
 						"method": "GET",
 						"header": []
@@ -169,6 +213,14 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "GET BY ID",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		},
@@ -177,6 +229,18 @@
 			"item": [
 				{
 					"name": "LOGIN AS ADMIN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"jwt_token\", res.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -381,7 +445,7 @@
 					"response": []
 				},
 				{
-					"name": "SET RETURN DATE",
+					"name": "SET ACTUAL RETURN DATE",
 					"request": {
 						"auth": {
 							"type": "bearer",
