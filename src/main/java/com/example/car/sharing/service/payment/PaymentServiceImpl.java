@@ -166,7 +166,7 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(payment);
     }
 
-    private SessionCreateParams createStripeSession(Payment payment) {
+    public SessionCreateParams createStripeSession(Payment payment) {
         return new SessionCreateParams.Builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
