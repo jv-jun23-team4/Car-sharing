@@ -87,7 +87,7 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             notificationAboutCreatingPayment(payment, rental);
         } catch (Exception e) {
-            logger.error("Error occurred while executing notification in payment service: ", e);
+            logger.warn("Error occurred while executing notification in payment service: ", e);
         }
         rental.setActive(false);
         rentalRepository.save(rental);
@@ -119,7 +119,7 @@ public class PaymentServiceImpl implements PaymentService {
             try {
                 notificationAboutCreatingPayment(renewedPayment, rental);
             } catch (Exception e) {
-                logger.error("Error occurred while executing notification in payment service: ", e);
+                logger.warn("Error occurred while executing notification in payment service: ", e);
             }
 
             paymentRepository.save(renewedPayment);

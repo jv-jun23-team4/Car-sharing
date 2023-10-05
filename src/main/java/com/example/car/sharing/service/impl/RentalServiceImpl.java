@@ -71,7 +71,7 @@ public class RentalServiceImpl implements RentalService {
             sendNotificationOfNewRentalToUser(userService.getAuthenticatedUser(), newRental);
             sendNotificationOfNewRentalToAdmins(newRental);
         } catch (Exception e) {
-            logger.error("Error occurred while executing notification in rental service: ", e);
+            logger.warn("Error occurred while executing notification in rental service: ", e);
         }
         return rentalMapper.toDto(rentalRepository.save(newRental));
     }
