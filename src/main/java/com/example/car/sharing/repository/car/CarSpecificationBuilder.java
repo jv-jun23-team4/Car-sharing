@@ -29,11 +29,11 @@ public class CarSpecificationBuilder implements SpecificationBuilder<Car, CarSea
             specification = specification.and(createSpecification(KEY_FOR_TYPE,
                     searchParameters.type()));
         }
-        if (searchParameters.fromPrice() != null) {
+        if (Objects.nonNull(searchParameters.fromPrice())) {
             specification = specification.and(createSpecification(KEY_FOR_PRICE_FROM,
                     searchParameters.fromPrice()));
         }
-        if (searchParameters.toPrice() != null) {
+        if (Objects.nonNull(searchParameters.toPrice())) {
             specification = specification.and(createSpecification(KEY_FOR_PRICE_TO,
                     searchParameters.toPrice()));
         }
