@@ -203,6 +203,9 @@ public class PaymentServiceImpl implements PaymentService {
         User user = userRepository.findById(rental.getUserId()).orElseThrow(
                 () -> new EntityNotFoundException("Can't find a user with id" + rental.getUserId())
         );
+        if (user.getChatId() == null) {
+            return;
+        }
         String carName = car.getBrand() + " " + car.getModel();
         LocalDate returnDate = rental.getActualReturnDate() == null
                 ? rental.getReturnDate() : rental.getActualReturnDate();

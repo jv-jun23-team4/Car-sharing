@@ -51,8 +51,7 @@ public class PaymentController {
             description = "Receive a response about a successful payment from Stripe, set "
                     + "payment status: PAID and return a successful payment message to the user")
     public ResponseEntity<String> handleSuccessfulPayment(
-            @RequestParam("session_id") String sessionId)
-            throws StripeException {
+            @RequestParam("session_id") String sessionId) {
         paymentService.handleSuccessfulPayment(sessionId);
         return ResponseEntity.ok("Payment successful! Thank you for your payment.");
     }
