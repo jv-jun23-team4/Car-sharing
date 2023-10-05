@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +40,7 @@ public class PaymentController {
         return paymentService.renewPaymentSession(sessionId);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping("/{user_id}")
     @Operation(summary = "Get users payments by users ID",
             description = "Get list of all users payments by users ID")

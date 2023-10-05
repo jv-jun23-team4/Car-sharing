@@ -29,14 +29,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class StripeWebHookController {
     private static final String PAYMENT_SUCCESS_TEMPLATE = """
     ┌───────────────────────────────────┐
-    │      Payment Confirmation         │
+           Payment Confirmation        \s
     ├───────────────────────────────────┤
-    │ Status: Successful                │
+      Status: Successful               \s
     │───────────────────────────────────│
-    │ Total Price: $%s                  │
+      Total Price: $%s
     │───────────────────────────────────│
-    │ Thank you for choosing our        │
-    │ service!                          │
+      Thank you for choosing our       \s
+      service!                 \s
     └───────────────────────────────────┘
             """;
     private final PaymentService paymentService;

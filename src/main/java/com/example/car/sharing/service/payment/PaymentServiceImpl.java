@@ -203,6 +203,7 @@ public class PaymentServiceImpl implements PaymentService {
         User user = userRepository.findById(rental.getUserId()).orElseThrow(
                 () -> new EntityNotFoundException("Can't find a user with id" + rental.getUserId())
         );
+        logger.info(user.toString());
         if (user.getChatId() == null) {
             return;
         }
