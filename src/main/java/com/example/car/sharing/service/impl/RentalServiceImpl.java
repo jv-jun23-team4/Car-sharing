@@ -17,12 +17,15 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 public class RentalServiceImpl implements RentalService {
+    private static final Logger logger = LoggerFactory.getLogger(RentalServiceImpl.class);
     private static final String NOTIFICATION_NEW_RENTAL = """
             Hello there!
             We are excited to inform you about your new rental details:
@@ -68,8 +71,7 @@ public class RentalServiceImpl implements RentalService {
             sendNotificationOfNewRentalToUser(userService.getAuthenticatedUser(), newRental);
             sendNotificationOfNewRentalToAdmins(newRental);
         } catch (Exception e) {
-            System.out.println("Error occurred while executing notification in rental service: "
-                    + e.getMessage());
+            logger.warn("Error occurred while executing notification in rental service: ", e);
         }
         return rentalMapper.toDto(rentalRepository.save(newRental));
     }
