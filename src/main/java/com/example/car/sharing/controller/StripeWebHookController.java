@@ -1,5 +1,6 @@
 package com.example.car.sharing.controller;
 
+import com.example.car.sharing.service.payment.PaymentService;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
@@ -19,14 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 public class StripeWebHookController {
-
+    private final PaymentService paymentService;
     private Logger logger = LoggerFactory.getLogger(StripeWebHookController.class);
 
     @Value("${stripe.webhook.secret}")
     private String endpointSecret;
 
     @PostMapping("/api/webhook")
-    public String handleStripeEvent(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
+    public String handleStripeEvent(
+            @RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
         if (sigHeader == null) {
             return "";
         }
@@ -56,13 +58,11 @@ public class StripeWebHookController {
             case "payment_intent.succeeded":
                 PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
                 logger.info("Payment for " + paymentIntent.getAmount() + " succeeded.");
-                // Then define and call a method to handle the successful payment intent.
-                // handlePaymentIntentSucceeded(paymentIntent);
+                paymentService.handleSuccessfulPayment(paymentIntent.getId());
                 break;
-            case "payment_method.attached":
+            case "payment_method.cancel":
                 PaymentMethod paymentMethod = (PaymentMethod) stripeObject;
-                // Then define and call a method to handle the successful attachment of a PaymentMethod.
-                // handlePaymentMethodAttached(paymentMethod);
+                paymentService.handleCanceledPayment(paymentMethod.getId());
                 break;
             default:
                 logger.warn("Unhandled event type: " + event.getType());
