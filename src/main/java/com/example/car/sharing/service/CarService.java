@@ -1,6 +1,7 @@
 package com.example.car.sharing.service;
 
 import com.example.car.sharing.dto.car.CarDto;
+import com.example.car.sharing.dto.car.CarSearchParameters;
 import com.example.car.sharing.dto.car.CreateCarDto;
 import com.example.car.sharing.dto.car.UpdateCarDto;
 import java.util.List;
@@ -15,4 +16,6 @@ public interface CarService {
     CarDto update(Long id, UpdateCarDto updateCarDto);
 
     void delete(Long id);
+
+    List<CarDto> findByParams(CarSearchParameters params);
 }

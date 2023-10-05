@@ -15,7 +15,7 @@ import com.example.car.sharing.dto.car.UpdateCarDto;
 import com.example.car.sharing.exception.EntityNotFoundException;
 import com.example.car.sharing.mapper.CarMapper;
 import com.example.car.sharing.model.Car;
-import com.example.car.sharing.repository.CarRepository;
+import com.example.car.sharing.repository.car.CarRepository;
 import com.example.car.sharing.service.impl.CarServiceImpl;
 import java.math.BigDecimal;
 import java.util.List;
