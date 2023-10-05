@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class DatabaseUtil {
+public class Scheduling {
     private static final String LAST_RENTAL_DAY_MESSAGE = """
             Hello.
             Today is the last day of car rental. If you miss the return date, an additional fee
