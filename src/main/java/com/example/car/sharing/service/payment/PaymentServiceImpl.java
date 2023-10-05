@@ -7,10 +7,10 @@ import com.example.car.sharing.model.Car;
 import com.example.car.sharing.model.Payment;
 import com.example.car.sharing.model.Rental;
 import com.example.car.sharing.model.User;
-import com.example.car.sharing.repository.CarRepository;
-import com.example.car.sharing.repository.PaymentRepository;
-import com.example.car.sharing.repository.RentalRepository;
-import com.example.car.sharing.repository.UserRepository;
+import com.example.car.sharing.repository.car.CarRepository;
+import com.example.car.sharing.repository.payment.PaymentRepository;
+import com.example.car.sharing.repository.rental.RentalRepository;
+import com.example.car.sharing.repository.user.UserRepository;
 import com.example.car.sharing.service.NotificationService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -23,6 +23,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class PaymentServiceImpl implements PaymentService {
+    private static final Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
     private static final String PAYMENT_SUCCESS = """
             Payment Confirmation: You have successfully rent a car.
             Rent Details:
@@ -84,8 +87,7 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             notificationAboutCreatingPayment(payment, rental);
         } catch (Exception e) {
-            System.out.println("Error occurred while executing notification in payment service: "
-                    + e.getMessage());
+            logger.warn("Error occurred while executing notification in payment service: ", e);
         }
         rental.setActive(false);
         rentalRepository.save(rental);
@@ -117,9 +119,7 @@ public class PaymentServiceImpl implements PaymentService {
             try {
                 notificationAboutCreatingPayment(renewedPayment, rental);
             } catch (Exception e) {
-                System.out.println(
-                        "Error occurred while executing notification in payment service: "
-                        + e.getMessage());
+                logger.warn("Error occurred while executing notification in payment service: ", e);
             }
 
             paymentRepository.save(renewedPayment);

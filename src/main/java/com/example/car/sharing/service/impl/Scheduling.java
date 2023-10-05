@@ -2,9 +2,9 @@ package com.example.car.sharing.service.impl;
 
 import com.example.car.sharing.model.Payment;
 import com.example.car.sharing.model.Rental;
-import com.example.car.sharing.repository.PaymentRepository;
-import com.example.car.sharing.repository.RentalRepository;
-import com.example.car.sharing.repository.UserRepository;
+import com.example.car.sharing.repository.payment.PaymentRepository;
+import com.example.car.sharing.repository.rental.RentalRepository;
+import com.example.car.sharing.repository.user.UserRepository;
 import com.example.car.sharing.service.NotificationService;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class DatabaseUtil {
+public class Scheduling {
     private static final String LAST_RENTAL_DAY_MESSAGE = """
             Hello.
             Today is the last day of car rental. If you miss the return date, an additional fee
