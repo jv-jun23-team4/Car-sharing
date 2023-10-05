@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +37,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             With this bot, you will be able to conveniently manage your rentals
             and receive notifications about the status of your rental.
             """;
+    private static final String ALREADY_LOGINED_USER = "You are already logged in!";
     private static final String RENTAL_TEMPLATE = """
             Rental Details:
             Car Model: %s
@@ -46,7 +48,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private static final String CHOOSE_OPTION_MESSAGE =
             "Please, choose what you want to see";
     private static final String START_COMMAND = "/start";
-    private static final String REGISTER_COMMAND = "/register";
+    private static final String REGISTER_COMMAND = "/login";
     private static final String MY_RENTALS = "/my_rentals";
     private static final String MY_HISTORY = "/my_history";
     private static final String RENTALS_MENU = "/rentals_menu";
@@ -101,7 +103,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             String message = update.getMessage().getText();
             switch (message) {
                 case START_COMMAND -> startCommandReceived(chatId, getName(update));
-                case REGISTER_COMMAND -> sendMessage(chatId, TIP_ABOUT_REGISTRATION_PATTERN);
+                case REGISTER_COMMAND -> registerCommandMessage(chatId);
                 case MY_RENTALS -> sendCurrentRental(chatId);
                 case MY_HISTORY -> sendRentalHistory(chatId);
                 case RENTALS_MENU -> sendKeyboard(chatId, CHOOSE_OPTION_MESSAGE);
@@ -147,6 +149,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                 optionalUser.get().getPassword())) {
 
             User user = optionalUser.get();
+            if (user.getChatId() != null && user.getChatId().equals(chatId)) {
+                sendMessage(chatId, ALREADY_LOGINED_USER);
+                return;
+            }
             user.setChatId(chatId);
             userRepository.save(user);
         } else {
@@ -161,6 +167,15 @@ public class TelegramBot extends TelegramLongPollingBot {
             sendRentalDetailsMessage(chatId, rentals);
         } else {
             sendMessage(chatId, UNREGISTERED_MESSAGE);
+        }
+    }
+
+    private void registerCommandMessage(long chatId) {
+        Optional<User> user = userRepository.findByChatId(chatId);
+        if (user.isPresent() && Objects.equals(user.get().getChatId(), chatId)) {
+            sendMessage(chatId, ALREADY_LOGINED_USER);
+        } else {
+            sendMessage(chatId, TIP_ABOUT_REGISTRATION_PATTERN);
         }
     }
 
