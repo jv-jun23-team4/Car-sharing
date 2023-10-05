@@ -1,6 +1,7 @@
 package com.example.car.sharing.controller;
 
 import com.example.car.sharing.dto.car.CarDto;
+import com.example.car.sharing.dto.car.CarSearchParameters;
 import com.example.car.sharing.dto.car.CreateCarDto;
 import com.example.car.sharing.dto.car.UpdateCarDto;
 import com.example.car.sharing.service.CarService;
@@ -61,5 +62,12 @@ public class CarController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         carService.delete(id);
+    }
+
+    @Operation(summary = "Search cars by params", description =
+            "Search cars by params. All params: brand, car type, from price, to price")
+    @GetMapping("/search")
+    public List<CarDto> searchBooks(CarSearchParameters searchParameters) {
+        return carService.findByParams(searchParameters);
     }
 }

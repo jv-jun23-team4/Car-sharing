@@ -1,7 +1,7 @@
 package com.example.car.sharing.security;
 
 import com.example.car.sharing.exception.EntityNotFoundException;
-import com.example.car.sharing.repository.UserRepository;
+import com.example.car.sharing.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +16,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return (UserDetails) userRepository.findByEmail(username).orElseThrow(() ->
-                new EntityNotFoundException("Can't find user in DB by email" + username));
+                new EntityNotFoundException("Can't find user in DB with email " + username));
     }
 }
