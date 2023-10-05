@@ -42,7 +42,7 @@ public class DatabaseUtil {
         }
     }
 
-    @Scheduled(cron = "0 12 * * *")
+    @Scheduled(cron = "0 12 * * * *")
     public void sendRentalWillEndSoon() {
         Set<Long> userIds = rentalRepository.findAll().stream()
                 .filter(Rental::isActive)
