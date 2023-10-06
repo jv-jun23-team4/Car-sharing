@@ -1,4 +1,4 @@
-package com.example.car.sharing.controller;
+package com.example.car.sharing.authentication;
 
 import com.example.car.sharing.dto.user.UpdateUserData;
 import com.example.car.sharing.dto.user.UpdateUserRole;
