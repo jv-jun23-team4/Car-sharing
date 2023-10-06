@@ -52,7 +52,7 @@ public class RentalController {
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping("/all")
-    @Operation(summary = "Get all rental")
+    @Operation(summary = "Get list of all rentals")
     public List<RentalDto> getAll() {
         return rentalService.getAll();
     }
