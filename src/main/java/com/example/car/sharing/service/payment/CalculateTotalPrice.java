@@ -4,7 +4,7 @@ import com.example.car.sharing.exception.EntityNotFoundException;
 import com.example.car.sharing.model.Car;
 import com.example.car.sharing.model.Payment;
 import com.example.car.sharing.model.Rental;
-import com.example.car.sharing.repository.CarRepository;
+import com.example.car.sharing.repository.car.CarRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

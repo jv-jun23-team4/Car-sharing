@@ -8,7 +8,7 @@ import com.example.car.sharing.exception.EntityNotFoundException;
 import com.example.car.sharing.exception.RegistrationException;
 import com.example.car.sharing.mapper.UserMapper;
 import com.example.car.sharing.model.User;
-import com.example.car.sharing.repository.UserRepository;
+import com.example.car.sharing.repository.user.UserRepository;
 import com.example.car.sharing.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

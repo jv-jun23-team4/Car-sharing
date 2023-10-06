@@ -13,7 +13,7 @@ public interface PaymentService {
 
     List<Payment> getPaymentsByUserId(Long userId);
 
-    void handleSuccessfulPayment(String sessionId) throws StripeException;
+    void handleSuccessfulPayment(String sessionId);
 
     void handleCanceledPayment(String sessionId);
 }
