@@ -17,7 +17,6 @@ ___
 - [‍📝Controllers](#controllers)
 - [🛠️Installation](#installation)
 - [⚙️Usage](#usage)
-- [🏋️Challenges](#challenges)
 - [🎯Summary](#summary)
 
 
@@ -155,13 +154,14 @@ ___
 
 #### CarController `/cars`
 
-| Feature            |               Endpoint               | CUSTOMER | MANAGER |
-|--------------------|:------------------------------------:|:--------:|:-------:|
-| Get all cars       |            GET: /api/cars            |    ✔     |    ✔    | 
-| Get car by ID      |         GET: /api/cars/{id}          |    ✔     |    ✔    | 
-| Create new car     |           POST: /api/cars            |    X     |    ✔    | 
-| Update a car       |         PUT: /api/cars/{id}          |    X     |    ✔    | 
-| Delete car by ID   |        DELETE: /api/cars/{id}        |    X     |    ✔    | 
+| Feature                |        Endpoint        | CUSTOMER | MANAGER |
+|------------------------|:----------------------:|:--------:|:-------:|
+| Get all cars           |     GET: /api/cars     |    ✔     |    ✔    | 
+| Get car by ID          |  GET: /api/cars/{id}   |    ✔     |    ✔    | 
+| Create new car         |    POST: /api/cars     |    X     |    ✔    | 
+| Update a car           |  PUT: /api/cars/{id}   |    X     |    ✔    | 
+| Delete car by ID       | DELETE: /api/cars/{id} |    X     |    ✔    | 
+| Search cars by params  | GET: /api/cars//search |    ✔     |    ✔    | 
 
 #### RentalController `/rentals`
 
@@ -179,7 +179,7 @@ ___
 |-----------------------------------------|:----------------------------:|:--------:|:-------:|
 | Create a new payment session            |     POST: /api/payments/     |    ✔     |    ✔    | 
 | Renew a payment session by session ID   |     POST: /api/payments      |    ✔     |    ✔    | 
-| Get users payments by users ID          | GET: /api/payments/{user_id} |    ✔     |    ✔    | 
+| Get users payments by users ID          | GET: /api/payments/{user_id} |    X     |    ✔    | 
 | Handle successful Stripe payments       | GET: /api/payments/success/  |    ✔     |    ✔    | 
 | Handle unsuccessful Stripe payments     |  GET: /api/payments/cancel/  |    ✔     |    ✔    | 
 
@@ -230,30 +230,31 @@ Also, you can run this project without docker, but before that, you need to conf
 
 [Back to content](#content)
 
-### Our project is open source, so feel free to use it for your own needs.
-
-### Documentation
-
+**Swagger UI**
 >You can access the Swagger UI for API documentation and testing. 
 Ensure that application is running.
 
-**Swagger UI URL:** 
-`http://localhost:8080/swagger-ui.html`
+#### Follow these steps:
 
->You can find file for importing collection of requests in Postman:
+1.     Start the Application
+2.     Launch web browser 
+3.     In the browser's address bar, enter the URL for the Swagger documentation
 
-**Postman:**
-`Car Sharing.postman_collection.json`
+` URL: `http://ec2-13-53-170-220.eu-north-1.compute.amazonaws.com/api/swagger-ui/index.html#/ `
 
+**Postman**
+>You can access the Postman and test API with ready-to-use postman collection.
+Ensure that application is running.
 
+#### Follow these steps:
 
-<hr>
-<div id="challenges" align="center">
-  <h2 >🏋️ ️Challenges</h2>
-</div>
-<hr>
+1.     Open Postman.
+2.     Click on the "Import" button in the top left corner. 
+3.     In the "Import" dialog, select the "File" tab.
+4.     Click on the "Upload Files" button and select the`Car Sharing.postman_collection.json` file from root project directory.
 
-[Back to content](#content)
+>You can also test our project in postman without downloading it locally, use this link.
+  URL:  http://ec2-13-53-170-220.eu-north-1.compute.amazonaws.com/api
 
 <hr>
 <div id="summary" align="center">
@@ -262,4 +263,8 @@ Ensure that application is running.
 <hr>
 
 [Back to content](#content)
+
+***_We are glad to welcome you in our Car Sharing Service!_***
+
+***_Thank you for your time with us, we hope you got a lot of benefits and new opportunities. We created this project with thoughts about our users and their needs, to make Car Sharing even more convenient and online payment even more secure._***
 
