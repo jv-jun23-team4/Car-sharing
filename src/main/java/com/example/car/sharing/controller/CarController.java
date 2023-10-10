@@ -67,7 +67,7 @@ public class CarController {
     @Operation(summary = "Search cars by params", description =
             "Search cars by params. All params: brand, car type, from price, to price")
     @GetMapping("/search")
-    public List<CarDto> searchBooks(CarSearchParameters searchParameters) {
+    public List<CarDto> searchCars(CarSearchParameters searchParameters) {
         return carService.findByParams(searchParameters);
     }
 }
