@@ -1,4 +1,4 @@
-package com.example.car.sharing.authentication;
+package com.example.car.sharing.controller;
 
 import com.example.car.sharing.exception.EntityNotFoundException;
 import com.example.car.sharing.model.Payment;

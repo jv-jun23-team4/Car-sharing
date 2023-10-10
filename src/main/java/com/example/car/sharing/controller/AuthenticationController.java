@@ -1,4 +1,4 @@
-package com.example.car.sharing.authentication;
+package com.example.car.sharing.controller;
 
 import com.example.car.sharing.dto.user.UserLoginRequestDto;
 import com.example.car.sharing.dto.user.UserLoginResponseDto;

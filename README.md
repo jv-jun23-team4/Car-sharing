@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div align="center"> <h1 > <img src=logo.jpg width="200" align="center" alt="50"/></h1></div>
 
 # <div align="center">Car Sharing Service</div>
@@ -9,15 +10,35 @@ ___
 
 #### In this README, you'll find detailed information about our project, its features, and how to get started with car sharing. Explore the exciting world of shared mobility and enjoy the freedom of driving without the responsibilities of ownership. 
 #### Happy car sharing!
+=======
+<div align="center"> <h1 > <img src=logo.jpg width="600" align="center" alt="50"/></h1></div>
+
+<h1><div align="center">Car Sharing Service</div></h1> 
+
+___
+
+### Welcome to our Car Sharing Service!
+
+#### Our Car Sharing Service application is powered by Spring Boot, offering a convenient and efficient way to share vehicles. Whether you need a car for a quick errand or a road trip, our service is designed to make your experience smooth and hassle-free.
+
+#### In this README, you'll find detailed information about our project, its features, and how to get started with car sharing. We offer you to try a reliable and convenient car sharing service without unnecessary worries and responsibilities. 
+#### Let's get started!
+>>>>>>> 6ab07f27887c0244dfb06c2bea91ef7782943740
 ___
 
 ## Content
 - [👨‍💻Project Overview](#Overview)
 - [🌟Features](#features)
 - [‍📝Controllers](#controllers)
+<<<<<<< HEAD
 - [🛠️Installation](#installation)
 - [⚙️Usage](#usage)
 - [🎯Summary](#summary)
+=======
+- [⚙️Usage](#usage)
+- [🛠️Installation](#installation)
+- [🎯Conclusion](#conclusion)
+>>>>>>> 6ab07f27887c0244dfb06c2bea91ef7782943740
 
 
 <hr>
@@ -185,6 +206,45 @@ ___
 
 
 <hr>
+<<<<<<< HEAD
+=======
+<div id="usage" align="center">
+  <h2 >⚙️ ️Usage</h2>
+</div>
+<hr>
+
+[Back to content](#content)
+
+#### You can use this application without installing anything because this project is deployed by AWS, so the functionality of our project can be accessed anytime and from anywhere. 
+#### You can test the work of our project easily, with the help of detailed documentation from Swagger UI or using the Postman collection. 
+**Swagger UI**
+>You can access the Swagger UI for API documentation and testing.
+
+
+#### Follow these steps:
+
+1.     Start the Application
+2.     Launch web browser 
+3.     In the browser's address bar, enter the URL for the Swagger documentation
+
+` URL: `http://ec2-51-20-108-114.eu-north-1.compute.amazonaws.com/api/swagger-ui/index.html#/ `
+
+**Postman**
+>You can access the Postman and test API with ready-to-use postman collection.
+
+#### Follow these steps:
+
+1.     Open Postman.
+2.     Click on the "Import" button in the top left corner. 
+3.     In the "Import" dialog, select the "File" tab.
+4.     Click on the "Upload Files" button and select the`Car Sharing.postman_collection.json` file from root project directory.
+
+>You can also test our project in postman without downloading it locally, use this link.
+URL:  http://ec2-13-53-170-220.eu-north-1.compute.amazonaws.com/api
+
+
+<hr>
+>>>>>>> 6ab07f27887c0244dfb06c2bea91ef7782943740
 <div id="installation" align="center">
   <h2 >🛠️ ️Installation</h2>
 </div>
@@ -199,8 +259,15 @@ ___
 
 Make sure you have the following apps installed, this is necessary to run our app:
 - Java 17 (https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+<<<<<<< HEAD
 - JDK, JDE
 - You may also need Telegram, Docker and Postman.
+=======
+- Docker (https://www.docker.com/products/docker-desktop/)
+- Maven (https://maven.apache.org/download.cgi)
+- MySql (https://dev.mysql.com/downloads/installer/)
+- You may also need Telegram and Postman.
+>>>>>>> 6ab07f27887c0244dfb06c2bea91ef7782943740
 
 ## How to start this app:
 Download git repository by git command:
@@ -223,6 +290,7 @@ Also, you can run this project without docker, but before that, you need to conf
   ```
 
 <hr>
+<<<<<<< HEAD
 <div id="usage" align="center">
   <h2 >⚙️ ️Usage</h2>
 </div>
@@ -259,6 +327,10 @@ Ensure that application is running.
 <hr>
 <div id="summary" align="center">
   <h2 >🎯 Summary</h2>
+=======
+<div id="conclusion" align="center">
+  <h2 >🎯 Conclusion</h2>
+>>>>>>> 6ab07f27887c0244dfb06c2bea91ef7782943740
 </div>
 <hr>
 
