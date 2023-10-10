@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class CalculateTotalPrice {
+public class TotalPriceCalculator {
     private static final BigDecimal FINE_PERCENTAGE = BigDecimal.valueOf(1.3);
     private final CarRepository carRepository;
 

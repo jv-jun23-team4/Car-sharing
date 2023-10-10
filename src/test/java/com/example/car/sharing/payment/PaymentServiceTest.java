@@ -12,7 +12,7 @@ import com.example.car.sharing.model.Payment;
 import com.example.car.sharing.model.Rental;
 import com.example.car.sharing.repository.payment.PaymentRepository;
 import com.example.car.sharing.repository.rental.RentalRepository;
-import com.example.car.sharing.service.payment.CalculateTotalPrice;
+import com.example.car.sharing.service.payment.TotalPriceCalculator;
 import com.example.car.sharing.service.payment.PaymentServiceImpl;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
@@ -44,7 +44,7 @@ class PaymentServiceTest {
     private RentalRepository rentalRepository;
 
     @Mock
-    private CalculateTotalPrice calculator;
+    private TotalPriceCalculator calculator;
 
     @InjectMocks
     private PaymentServiceImpl paymentService;

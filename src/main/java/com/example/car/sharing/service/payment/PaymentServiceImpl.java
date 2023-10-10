@@ -55,7 +55,7 @@ public class PaymentServiceImpl implements PaymentService {
     private static final String MULTIPLY_UNIT_AMOUNT = "100";
     private final PaymentRepository paymentRepository;
     private final RentalRepository rentalRepository;
-    private final CalculateTotalPrice calculator;
+    private final TotalPriceCalculator calculator;
     private final NotificationService notificationService;
     private final CarRepository carRepository;
     private final UserRepository userRepository;
