@@ -1,21 +1,5 @@
-<<<<<<< HEAD
-<div align="center"> <h1 > <img src=logo.jpg width="200" align="center" alt="50"/></h1></div>
-
-# <div align="center">Car Sharing Service</div>
-___
-
-#### Welcome to our Car Sharing Service!
-
-#### Our Car Sharing Service application is powered by Spring Boot, offering a convenient and efficient way to share vehicles. Whether you need a car for a quick errand or a road trip, our service is designed to make your experience smooth and hassle-free.
-
-#### In this README, you'll find detailed information about our project, its features, and how to get started with car sharing. Explore the exciting world of shared mobility and enjoy the freedom of driving without the responsibilities of ownership. 
-#### Happy car sharing!
-=======
 <div align="center"> <h1 > <img src=logo.jpg width="600" align="center" alt="50"/></h1></div>
-
-<h1><div align="center">Car Sharing Service</div></h1> 
-
-___
+<div align="center"> <h1> Car Sharing Service </h1> </div>
 
 ### Welcome to our Car Sharing Service!
 
@@ -23,23 +7,18 @@ ___
 
 #### In this README, you'll find detailed information about our project, its features, and how to get started with car sharing. We offer you to try a reliable and convenient car sharing service without unnecessary worries and responsibilities. 
 #### Let's get started!
->>>>>>> 6ab07f27887c0244dfb06c2bea91ef7782943740
-___
 
+---
 ## Content
 - [👨‍💻Project Overview](#Overview)
 - [🌟Features](#features)
 - [‍📝Controllers](#controllers)
-<<<<<<< HEAD
 - [🛠️Installation](#installation)
 - [⚙️Usage](#usage)
 - [🎯Summary](#summary)
-=======
 - [⚙️Usage](#usage)
 - [🛠️Installation](#installation)
 - [🎯Conclusion](#conclusion)
->>>>>>> 6ab07f27887c0244dfb06c2bea91ef7782943740
-
 
 <hr>
 <div id="Overview" align="center">
@@ -68,7 +47,6 @@ ___
 - **Postman:** Postman is used for automate testing workflows and application presentation.
 - **Stripe:** Stripe is used for online payment implementation.
 - **Telegram:** Telegram is used to create notifications for customers and managers with current car rental information.
-- **Spark:** Spark is used for online payment implementation, using webhook.
  ___
 ### Domain Models (Entities)
 ___
@@ -206,8 +184,6 @@ ___
 
 
 <hr>
-<<<<<<< HEAD
-=======
 <div id="usage" align="center">
   <h2 >⚙️ ️Usage</h2>
 </div>
@@ -244,7 +220,6 @@ URL:  http://ec2-13-53-170-220.eu-north-1.compute.amazonaws.com/api
 
 
 <hr>
->>>>>>> 6ab07f27887c0244dfb06c2bea91ef7782943740
 <div id="installation" align="center">
   <h2 >🛠️ ️Installation</h2>
 </div>
@@ -267,7 +242,6 @@ Make sure you have the following apps installed, this is necessary to run our ap
 - Maven (https://maven.apache.org/download.cgi)
 - MySql (https://dev.mysql.com/downloads/installer/)
 - You may also need Telegram and Postman.
->>>>>>> 6ab07f27887c0244dfb06c2bea91ef7782943740
 
 ## How to start this app:
 Download git repository by git command:
@@ -289,48 +263,11 @@ Also, you can run this project without docker, but before that, you need to conf
   mvn spring-boot:run
   ```
 
-<hr>
-<<<<<<< HEAD
-<div id="usage" align="center">
-  <h2 >⚙️ ️Usage</h2>
-</div>
-<hr>
-
-[Back to content](#content)
-
-**Swagger UI**
->You can access the Swagger UI for API documentation and testing. 
-Ensure that application is running.
-
-#### Follow these steps:
-
-1.     Start the Application
-2.     Launch web browser 
-3.     In the browser's address bar, enter the URL for the Swagger documentation
-
-` URL: `http://ec2-13-53-170-220.eu-north-1.compute.amazonaws.com/api/swagger-ui/index.html#/ `
-
-**Postman**
->You can access the Postman and test API with ready-to-use postman collection.
-Ensure that application is running.
-
-#### Follow these steps:
-
-1.     Open Postman.
-2.     Click on the "Import" button in the top left corner. 
-3.     In the "Import" dialog, select the "File" tab.
-4.     Click on the "Upload Files" button and select the`Car Sharing.postman_collection.json` file from root project directory.
-
->You can also test our project in postman without downloading it locally, use this link.
-  URL:  http://ec2-13-53-170-220.eu-north-1.compute.amazonaws.com/api
+---
 
 <hr>
-<div id="summary" align="center">
-  <h2 >🎯 Summary</h2>
-=======
 <div id="conclusion" align="center">
   <h2 >🎯 Conclusion</h2>
->>>>>>> 6ab07f27887c0244dfb06c2bea91ef7782943740
 </div>
 <hr>
 
