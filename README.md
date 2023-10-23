@@ -15,8 +15,6 @@
 - [‍📝Controllers](#controllers)
 - [🛠️Installation](#installation)
 - [⚙️Usage](#usage)
-- [🎯Summary](#summary)
-- [⚙️Usage](#usage)
 - [🛠️Installation](#installation)
 - [🎯Conclusion](#conclusion)
 
