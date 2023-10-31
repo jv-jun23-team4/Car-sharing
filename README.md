@@ -1,9 +1,9 @@
 <div align="center"> <h1 > <img src=logo.jpg width="600" align="center" alt="50"/></h1></div>
-<div align="center"> <h1> Car Sharing Service </h1> </div>
+<div align="center"> <h1> SwiftDrive </h1> </div>
 
-### Welcome to our Car Sharing Service!
+### Welcome to our Car Rental Service!
 
-#### Our Car Sharing Service application is powered by Spring Boot, offering a convenient and efficient way to share vehicles. Whether you need a car for a quick errand or a road trip, our service is designed to make your experience smooth and hassle-free.
+#### Our Car Rental Service application is powered by Spring Boot, offering a convenient and efficient way to share vehicles. Whether you need a car for a quick errand or a road trip, our service is designed to make your experience smooth and hassle-free.
 
 #### In this README, you'll find detailed information about our project, its features, and how to get started with car sharing. We offer you to try a reliable and convenient car sharing service without unnecessary worries and responsibilities. 
 #### Let's get started!
@@ -271,7 +271,7 @@ Also, you can run this project without docker, but before that, you need to conf
 
 [Back to content](#content)
 
-***_We are glad to welcome you in our Car Sharing Service!_***
+***_We are glad to welcome you in our Car Rental Service!_***
 
-***_Thank you for your time with us, we hope you got a lot of benefits and new opportunities. We created this project with thoughts about our users and their needs, to make Car Sharing even more convenient and online payment even more secure._***
+***_Thank you for your time with us, we hope you got a lot of benefits and new opportunities. We created this project with thoughts about our users and their needs, to make SwiftDrive even more convenient and online payment even more secure._***
 
