@@ -13,7 +13,6 @@
 - [👨‍💻Project Overview](#Overview)
 - [🌟Features](#features)
 - [‍📝Controllers](#controllers)
-- [🛠️Installation](#installation)
 - [⚙️Usage](#usage)
 - [🛠️Installation](#installation)
 - [🎯Conclusion](#conclusion)
