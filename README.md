@@ -231,14 +231,9 @@ URL:  http://ec2-13-53-170-220.eu-north-1.compute.amazonaws.com/api
 
 Make sure you have the following apps installed, this is necessary to run our app:
 - Java 17 (https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
-<<<<<<< HEAD
-- JDK, JDE
-- You may also need Telegram, Docker and Postman.
-=======
 - Docker (https://www.docker.com/products/docker-desktop/)
 - Maven (https://maven.apache.org/download.cgi)
 - MySql (https://dev.mysql.com/downloads/installer/)
-- You may also need Telegram and Postman.
 
 ## How to start this app:
 Download git repository by git command:
